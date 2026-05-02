@@ -237,6 +237,69 @@ header.scrolled .logo img {
     justify-content: center;
 }
 
+/* Close Button — Elegant Custom X */
+.close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.close-btn:hover {
+    transform: rotate(90deg);
+}
+
+.close-icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+.close-icon::before,
+.close-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 1px;
+    background: var(--gold);
+    transition: background 0.3s ease;
+}
+
+.close-icon::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-icon::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.close-btn:hover .close-icon::before,
+.close-btn:hover .close-icon::after {
+    background: var(--black);
+}
+
+/* Mobile Menu Close — Larger */
+.mobile-menu-overlay .close-btn {
+    position: absolute;
+    top: 35px;
+    right: 35px;
+}
+
+.mobile-menu-overlay .close-icon::before,
+.mobile-menu-overlay .close-icon::after {
+    width: 28px;
+    height: 1.5px;
+}
+
 /* Hero Section */
 .hero {
     height: 90vh;
@@ -675,37 +738,6 @@ footer {
     color: var(--black);
     text-transform: uppercase;
     letter-spacing: 3px;
-}
-
-.mobile-nav-link.close-btn {
-    background: none;
-    border: 1px solid rgba(0,0,0,0.05);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    color: var(--black);
-    position: relative;
-    overflow: hidden;
-}
-
-.close-btn i {
-    font-size: 16px;
-    font-weight: 200; /* Extra dünn */
-    transition: all 0.4s ease;
-}
-
-.close-btn:hover {
-    border-color: var(--gold);
-    transform: rotate(90deg);
-}
-
-.close-btn:hover i {
-    color: var(--gold);
 }
 
 .mobile-menu-overlay .close-btn {
