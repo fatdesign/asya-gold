@@ -80,6 +80,7 @@ window.startCheckout = () => {
     
     // Simulations-Effekt
     const btn = document.querySelector('.cart-footer .cta-luxury');
+    const originalText = btn.innerText;
     btn.innerText = 'Verarbeite...';
     btn.disabled = true;
 
@@ -88,59 +89,29 @@ window.startCheckout = () => {
         cart = [];
         updateCartUI();
         toggleCart();
-        btn.innerText = 'Zur Kasse';
+        btn.innerText = originalText;
         btn.disabled = false;
     }, 1500);
 };
 
 // --- Product Data & Rendering ---
-// Wir laden die Produkte aus dem LocalStorage, damit Admin-Änderungen sofort sichtbar sind.
 const defaultProducts = [
-    {
-        id: 1,
-        title: "L'Aurore Ring",
-        category: "Signature Collection",
-        price: "2.490 €",
-        image: "images/gold_diamond_ring_luxury_1777729778737.png",
-        active: true
-    },
-    {
-        id: 2,
-        title: "Étoile Collier",
-        category: "Fine Necklaces",
-        price: "1.850 €",
-        image: "images/gold_necklace_elegant_1777729798075.png",
-        active: true
-    },
-    {
-        id: 3,
-        title: "Océan Bracelet",
-        category: "Timeless Wristwear",
-        price: "3.200 €",
-        image: "images/gold_bracelet_set_1777729811867.png",
-        active: true
-    },
-    {
-        id: 4,
-        title: "Lumière Hoops",
-        category: "Earrings",
-        price: "950 €",
-        image: "images/gold_earrings_minimalist_1777729825390.png",
-        active: true
-    }
+    { id: 1, title: "L'Aurore Ring", category: "Signature Collection", price: 2490, image: "images/gold_diamond_ring_luxury_1777729778737.png", active: true },
+    { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: 1850, image: "images/gold_necklace_elegant_1777729798075.png", active: true },
+    { id: 3, title: "Océan Bracelet", category: "Timeless Wristwear", price: 3200, image: "images/gold_bracelet_set_1777729811867.png", active: true },
+    { id: 4, title: "Lumière Hoops", category: "Earrings", price: 950, image: "images/gold_earrings_minimalist_1777729825390.png", active: true }
 ];
 
 let products = JSON.parse(localStorage.getItem('asya_products')) || defaultProducts;
-if (!localStorage.getItem('asya_products')) {
-    localStorage.setItem('asya_products', JSON.stringify(defaultProducts));
-}
 
 const container = document.getElementById('product-container');
 
+function formatCurrency(val) {
+    return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
+}
+
 function renderProducts() {
     if (!container) return;
-    
-    // Nur aktive Produkte im Shop anzeigen
     const activeProducts = products.filter(p => p.active);
     
     container.innerHTML = activeProducts.map(p => `
@@ -154,11 +125,36 @@ function renderProducts() {
                     <p>${p.category}</p>
                     <h3>${p.title}</h3>
                 </div>
-                <div class="product-price">${p.price}</div>
+                <div class="product-price">${formatCurrency(p.price)}</div>
             </div>
         </div>
     `).join('');
+}
 
+function updateCartUI() {
+    localStorage.setItem('asya_cart', JSON.stringify(cart));
+    cartCount.innerText = cart.length;
+
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `<p style="text-align: center; color: var(--gray); margin-top: 50px;">Ihr Warenkorb ist noch leer.</p>`;
+        cartTotalPrice.innerText = '0,00 €';
+        return;
+    }
+
+    cartItemsContainer.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+            <img src="${item.image}" class="cart-item-img">
+            <div class="cart-item-info">
+                <h4>${item.title}</h4>
+                <p>${formatCurrency(item.price)}</p>
+            </div>
+            <button class="remove-item" onclick="removeFromCart(${index})"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+    `).join('');
+
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    cartTotalPrice.innerText = formatCurrency(total);
+}
     // Intersection Observer for reveal animation
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {

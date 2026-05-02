@@ -23,10 +23,11 @@
         <div class="container">
             <div class="admin-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 50px;">
                 
-                <!-- Form: Produkt hinzufügen -->
+                <!-- Form: Produkt hinzufügen / bearbeiten -->
                 <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
-                    <h3 class="luxury-text" style="font-size: 24px; margin-bottom: 30px;">Produkt hinzufügen</h3>
+                    <h3 class="luxury-text" id="form-title" style="font-size: 24px; margin-bottom: 30px;">Produkt hinzufügen</h3>
                     <form id="add-product-form">
+                        <input type="hidden" id="edit-id">
                         <div class="form-group" style="margin-bottom: 20px;">
                             <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Produktname</label>
                             <input type="text" id="title" required style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
@@ -41,14 +42,15 @@
                             </select>
                         </div>
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Preis (z.B. 1.200 €)</label>
-                            <input type="text" id="price" required style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
+                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Preis (nur Ziffern)</label>
+                            <input type="number" id="price" step="0.01" required placeholder="z.B. 1290" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
                         </div>
                         <div class="form-group" style="margin-bottom: 20px;">
                             <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Bild-URL</label>
                             <input type="text" id="image" placeholder="images/..." style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
                         </div>
-                        <button type="submit" class="cta-luxury" style="width: 100%;">Produkt speichern</button>
+                        <button type="submit" id="submit-btn" class="cta-luxury" style="width: 100%;">Produkt speichern</button>
+                        <button type="button" id="cancel-btn" style="width: 100%; margin-top: 10px; background: none; border: none; font-size: 11px; cursor: pointer; color: var(--gray); display: none;" onclick="resetForm()">Abbrechen</button>
                     </form>
                 </div>
 
@@ -67,13 +69,17 @@
     <script>
         // Admin-System synchronisiert mit dem Shop
         const defaultProducts = [
-            { id: 1, title: "L'Aurore Ring", category: "Signature Collection", price: "2.490 €", image: "images/gold_diamond_ring_luxury_1777729778737.png", active: true },
-            { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: "1.850 €", image: "images/gold_necklace_elegant_1777729798075.png", active: true },
-            { id: 3, title: "Océan Bracelet", category: "Timeless Wristwear", price: "3.200 €", image: "images/gold_bracelet_set_1777729811867.png", active: true },
-            { id: 4, title: "Lumière Hoops", category: "Earrings", price: "950 €", image: "images/gold_earrings_minimalist_1777729825390.png", active: true }
+            { id: 1, title: "L'Aurore Ring", category: "Signature Collection", price: 2490, image: "images/gold_diamond_ring_luxury_1777729778737.png", active: true },
+            { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: 1850, image: "images/gold_necklace_elegant_1777729798075.png", active: true },
+            { id: 3, title: "Océan Bracelet", category: "Timeless Wristwear", price: 3200, image: "images/gold_bracelet_set_1777729811867.png", active: true },
+            { id: 4, title: "Lumière Hoops", category: "Earrings", price: 950, image: "images/gold_earrings_minimalist_1777729825390.png", active: true }
         ];
 
         let products = JSON.parse(localStorage.getItem('asya_products')) || defaultProducts;
+
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
+        }
 
         function renderAdminList() {
             const list = document.getElementById('admin-product-list');
@@ -82,37 +88,66 @@
                     <img src="${p.image}" style="width: 50px; height: 60px; object-fit: cover; background: #eee;">
                     <div style="flex: 1;">
                         <h4 style="font-family: var(--font-serif); font-size: 18px;">${p.title}</h4>
-                        <p style="font-size: 11px; color: var(--gray); text-transform: uppercase;">${p.category} | ${p.price}</p>
+                        <p style="font-size: 11px; color: var(--gray); text-transform: uppercase;">${p.category} | ${formatCurrency(p.price)}</p>
                     </div>
-                    <div style="display: flex; gap: 10px;">
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="editProduct(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: #eee; border: none;">Bearbeiten</button>
                         <button onclick="toggleActive(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: ${p.active ? '#e1f5fe' : '#ffebee'}; border: none; color: ${p.active ? '#0288d1' : '#c62828'};">
-                            ${p.active ? 'Aktiv' : 'Deaktiviert'}
+                            ${p.active ? 'Aktiv' : 'Inaktiv'}
                         </button>
-                        <button onclick="deleteProduct(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: #eee; border: none; color: #666;">
-                            Löschen
-                        </button>
+                        <button onclick="deleteProduct(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: #fff; border: 1px solid #eee; color: #999;">Löschen</button>
                     </div>
                 </div>
             `).join('');
             
-            // Sync mit dem echten Shop-System (für Demo-Zwecke)
             localStorage.setItem('asya_products', JSON.stringify(products));
         }
 
         document.getElementById('add-product-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const newProduct = {
-                id: Date.now(),
+            const editId = document.getElementById('edit-id').value;
+            const productData = {
                 title: document.getElementById('title').value,
                 category: document.getElementById('category').value,
-                price: document.getElementById('price').value,
+                price: parseFloat(document.getElementById('price').value),
                 image: document.getElementById('image').value || 'images/gold_diamond_ring_luxury_1777729778737.png',
                 active: true
             };
-            products.push(newProduct);
+
+            if (editId) {
+                // Bearbeiten
+                const index = products.findIndex(p => p.id == editId);
+                products[index] = { ...products[index], ...productData };
+            } else {
+                // Neu hinzufügen
+                productData.id = Date.now();
+                products.push(productData);
+            }
+
+            resetForm();
             renderAdminList();
-            e.target.reset();
         });
+
+        window.editProduct = (index) => {
+            const p = products[index];
+            document.getElementById('edit-id').value = p.id;
+            document.getElementById('title').value = p.title;
+            document.getElementById('category').value = p.category;
+            document.getElementById('price').value = p.price;
+            document.getElementById('image').value = p.image;
+            
+            document.getElementById('form-title').innerText = 'Produkt bearbeiten';
+            document.getElementById('submit-btn').innerText = 'Änderungen speichern';
+            document.getElementById('cancel-btn').style.display = 'block';
+        };
+
+        window.resetForm = () => {
+            document.getElementById('add-product-form').reset();
+            document.getElementById('edit-id').value = '';
+            document.getElementById('form-title').innerText = 'Produkt hinzufügen';
+            document.getElementById('submit-btn').innerText = 'Produkt speichern';
+            document.getElementById('cancel-btn').style.display = 'none';
+        };
 
         window.toggleActive = (index) => {
             products[index].active = !products[index].active;
