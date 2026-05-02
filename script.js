@@ -189,13 +189,30 @@ async function renderProducts() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+                    entry.target.classList.add('active');
                 }
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.product-item').forEach(item => {
-            observer.observe(item);
+        // Beobachte Produkte und alle .reveal Elemente
+        document.querySelectorAll('.product-item, .reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // --- Subtiler Parallax Effekt für Lifestyle-Bild ---
+        window.addEventListener('scroll', () => {
+            const parallaxImg = document.querySelector('.lifestyle-split-image img');
+            if (parallaxImg) {
+                const scrolled = window.pageYOffset;
+                const rect = parallaxImg.parentElement.getBoundingClientRect();
+                const offset = window.innerHeight - rect.top;
+                
+                if (offset > 0 && rect.top < window.innerHeight) {
+                    const speed = 0.05;
+                    const yPos = -(offset * speed);
+                    parallaxImg.style.transform = `translateY(${yPos}px) scale(1.15)`;
+                }
+            }
         });
 
     } catch (err) {
