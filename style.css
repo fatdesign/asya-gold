@@ -418,13 +418,13 @@ header.scrolled .logo img {
 
 /* Sections */
 section {
-    padding: 150px 0;
+    padding: 100px 0;
 }
 
 .section-intro {
     text-align: center;
     max-width: 800px;
-    margin: 0 auto 100px;
+    margin: 0 auto 60px;
 }
 
 .section-intro span {
@@ -447,8 +447,8 @@ section {
     grid-template-columns: 1fr 1fr;
     align-items: center;
     gap: 60px;
-    margin: 80px auto 120px;
-    max-width: 1000px; /* Kompakte Breite für Zentrierung */
+    margin: 0 auto 100px; /* Kein Margin oben, da Padding der Sektion greift */
+    max-width: 1000px;
     padding: 0 20px;
 }
 
