@@ -32,6 +32,39 @@ html {
     scroll-behavior: smooth;
 }
 
+/* ===== LUXURY CUSTOM SCROLLBAR ===== */
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) var(--cream);
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--cream);
+    border-left: 1px solid var(--border);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        to bottom,
+        var(--gold-light),
+        var(--gold)
+    );
+    border-radius: 0; /* Kein Radius – passt zum klaren Luxus-Stil */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold);
+}
+
+/* ====================================== */
+
 body {
     background-color: var(--cream);
     /* Subtile Marmor-Textur */
