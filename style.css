@@ -61,7 +61,7 @@ h1, h2, h3, .luxury-text {
     background: var(--gold);
     color: var(--black);
     height: 35px;
-    display: flex;
+    display: none; /* Standardmäßig versteckt gegen Flashing */
     align-items: center;
     overflow: hidden;
     position: fixed;

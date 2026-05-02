@@ -217,7 +217,6 @@ async function fetchSettings() {
         
         // AN/AUS Logik
         if (settings.marquee_active === 'false') {
-            if (marqueeBar) marqueeBar.style.display = 'none';
             if (header) header.style.top = '0';
             
             // Padding Anpassung für Shop-Seite
@@ -228,6 +227,8 @@ async function fetchSettings() {
             return;
         }
 
+        // Wenn aktiv: Einblenden und Text setzen
+        if (marqueeBar) marqueeBar.style.display = 'flex';
         const text = settings.marquee_text || 'ASYA GOLD — FINE JEWELRY & ART';
         
         // Wir wiederholen den Text mehrfach für einen nahtlosen Übergang
