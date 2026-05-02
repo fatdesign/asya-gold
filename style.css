@@ -444,69 +444,78 @@ section {
 /* Lifestyle Split Section */
 .lifestyle-split {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.1fr 0.9fr;
     align-items: center;
-    gap: 80px;
-    margin: 150px 0;
-    background: var(--white);
+    gap: 100px;
+    margin: 60px 0 120px; /* Weniger Abstand nach oben */
 }
 
 .lifestyle-split-image {
     width: 100%;
-    height: 600px;
+    height: 700px; /* Etwas höher für mehr Präsenz */
     overflow: hidden;
+    box-shadow: 20px 20px 60px rgba(0,0,0,0.03);
 }
 
 .lifestyle-split-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 1.5s ease;
+    transition: transform 2s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .lifestyle-split:hover .lifestyle-split-image img {
-    transform: scale(1.05);
+    transform: scale(1.08);
 }
 
 .lifestyle-split-content {
-    padding-right: 50px;
+    padding: 20px 0;
 }
 
 .lifestyle-split-content span {
     display: block;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 4px;
     color: var(--gold);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .lifestyle-split-content h2 {
-    font-size: 42px;
-    line-height: 1.2;
-    margin-bottom: 30px;
+    font-size: 52px; /* Größer und prägnanter */
+    line-height: 1.1;
+    margin-bottom: 35px;
     font-weight: 300;
 }
 
 .lifestyle-split-content p {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.8;
     color: var(--gray);
-    margin-bottom: 40px;
+    margin-bottom: 50px;
+    max-width: 450px; /* Verhindert zu lange, hässliche Zeilen */
+}
+
+@media (max-width: 1024px) {
+    .lifestyle-split {
+        gap: 50px;
+    }
 }
 
 @media (max-width: 768px) {
     .lifestyle-split {
         grid-template-columns: 1fr;
         gap: 40px;
-        margin: 80px 0;
+        margin: 40px 0 80px;
     }
     .lifestyle-split-content {
-        padding-right: 0;
         text-align: center;
     }
+    .lifestyle-split-content p {
+        margin: 0 auto 40px;
+    }
     .lifestyle-split-image {
-        height: 400px;
+        height: 450px;
     }
 }
 
