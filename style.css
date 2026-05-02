@@ -504,6 +504,40 @@ section {
     color: var(--gold);
 }
 
+/* Stock Badges */
+.stock-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 8px 15px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    z-index: 5;
+}
+
+.stock-badge.low {
+    background: var(--white);
+    color: #c62828;
+    border: 1px solid #c62828;
+}
+
+.stock-badge.out {
+    background: var(--near-black);
+    color: var(--white);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    text-align: center;
+}
+
+.product-item.out-of-stock img {
+    opacity: 0.5;
+    filter: grayscale(1);
+}
+
 .add-overlay {
     position: absolute;
     bottom: 20px;
