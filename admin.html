@@ -58,6 +58,17 @@
                     </form>
                 </div>
 
+                <!-- Marquee Settings -->
+                <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
+                    <h3 class="luxury-text" style="font-size: 24px; margin-bottom: 30px;">Ankündigungsleiste (Marquee)</h3>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Text der Laufleiste</label>
+                        <textarea id="marquee-input" rows="3" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans); resize: vertical;"></textarea>
+                    </div>
+                    <button onclick="updateSettings()" id="save-settings-btn" class="cta-luxury" style="width: 100%;">Text aktualisieren</button>
+                    <p style="font-size: 10px; color: var(--gray); margin-top: 10px;">Tipp: Nutze • oder | als Trenner zwischen den Sätzen.</p>
+                </div>
+
                 <!-- Liste: Produkte verwalten -->
                 <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
                     <h3 class="luxury-text" style="font-size: 24px; margin-bottom: 30px;">Inventar verwalten</h3>
@@ -230,7 +241,49 @@
             document.getElementById('cancel-btn').style.display = 'none';
         };
 
+        // --- Marquee Settings ---
+        async function fetchSettings() {
+            try {
+                const res = await fetch(`${API_URL}/settings`);
+                const settings = await res.json();
+                if (settings.marquee_text) {
+                    document.getElementById('marquee-input').value = settings.marquee_text;
+                }
+            } catch (err) {
+                console.error("Einstellungen konnten nicht geladen werden:", err);
+            }
+        }
+
+        window.updateSettings = async () => {
+            const btn = document.getElementById('save-settings-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "Speichere...";
+            btn.disabled = true;
+
+            const marqueeText = document.getElementById('marquee-input').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/settings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ marquee_text: marqueeText })
+                });
+                
+                if (response.ok) {
+                    alert("Einstellungen erfolgreich aktualisiert!");
+                } else {
+                    throw new Error("Update fehlgeschlagen");
+                }
+            } catch (err) {
+                alert("Fehler: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        };
+
         fetchProducts();
+        fetchSettings();
     </script>
 </body>
 </html>

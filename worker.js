@@ -91,6 +91,27 @@ export default {
         return new Response(object.body, { headers });
       }
 
+      // --- API: Einstellungen abrufen ---
+      if (path === "/api/settings" && method === "GET") {
+        const { results } = await env.DB.prepare("SELECT * FROM settings").all();
+        const settings = {};
+        results.forEach(r => settings[r.key] = r.value);
+        return new Response(JSON.stringify(settings), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // --- API: Einstellungen speichern ---
+      if (path === "/api/settings" && method === "POST") {
+        const data = await request.json();
+        for (const [key, value] of Object.entries(data)) {
+          await env.DB.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)")
+            .bind(key, value)
+            .run();
+        }
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
       return new Response("Not Found", { status: 404 });
 
     } catch (err) {
