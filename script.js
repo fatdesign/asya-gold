@@ -185,19 +185,8 @@ async function renderProducts() {
             `;
         }).join('');
 
-        // Reveal Animation Setup
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        // Beobachte Produkte und alle .reveal Elemente
-        document.querySelectorAll('.product-item, .reveal').forEach(el => {
-            observer.observe(el);
-        });
+        // Initialisiere Animationen für dynamisch geladene Produkte
+        initScrollAnimations();
 
         // --- Subtiler Parallax Effekt für Lifestyle-Bild ---
         window.addEventListener('scroll', () => {
@@ -217,9 +206,26 @@ async function renderProducts() {
 
     } catch (err) {
         console.error("Fehler beim Laden der Produkte:", err);
-        container.innerHTML = `<p style="text-align: center; grid-column: 1/-1; color: var(--gray); padding: 100px 0;">Verbindung zum Server fehlgeschlagen.</p>`;
     }
 }
+
+// --- Zentrale Animations-Logik ---
+function initScrollAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.product-item, .reveal').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Start der Animationen beim Laden
+document.addEventListener('DOMContentLoaded', initScrollAnimations);
 
 // --- Settings (Marquee) ---
 async function fetchSettings() {
