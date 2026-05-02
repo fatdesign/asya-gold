@@ -8,6 +8,69 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// --- Cart Management ---
+const cartBtn = document.querySelector('.cart-btn');
+const closeCartBtn = document.getElementById('close-cart');
+const cartDrawer = document.getElementById('cart-drawer');
+const cartOverlay = document.getElementById('cart-overlay');
+const cartItemsContainer = document.getElementById('cart-items-container');
+const cartTotalPrice = document.getElementById('cart-total-price');
+const cartCount = document.getElementById('cart-count');
+
+let cart = JSON.parse(localStorage.getItem('asya_cart')) || [];
+
+function toggleCart() {
+    cartDrawer.classList.toggle('active');
+    cartOverlay.classList.toggle('active');
+}
+
+cartBtn.addEventListener('click', toggleCart);
+closeCartBtn.addEventListener('click', toggleCart);
+cartOverlay.addEventListener('click', toggleCart);
+
+function updateCartUI() {
+    localStorage.setItem('asya_cart', JSON.stringify(cart));
+    cartCount.innerText = cart.length;
+
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `<p style="text-align: center; color: var(--gray); margin-top: 50px;">Ihr Warenkorb ist noch leer.</p>`;
+        cartTotalPrice.innerText = '0,00 €';
+        return;
+    }
+
+    cartItemsContainer.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+            <img src="${item.image}" class="cart-item-img">
+            <div class="cart-item-info">
+                <h4>${item.title}</h4>
+                <p>${item.price}</p>
+            </div>
+            <button class="remove-item" onclick="removeFromCart(${index})"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+    `).join('');
+
+    const total = cart.reduce((sum, item) => {
+        const price = parseFloat(item.price.replace(' €', '').replace('.', '').replace(',', '.'));
+        return sum + price;
+    }, 0);
+
+    cartTotalPrice.innerText = total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+}
+
+window.addToCart = (productId) => {
+    const product = products.find(p => p.id === productId);
+    if (product) {
+        cart.push(product);
+        updateCartUI();
+        if (!cartDrawer.classList.contains('active')) toggleCart();
+    }
+};
+
+window.removeFromCart = (index) => {
+    cart.splice(index, 1);
+    updateCartUI();
+};
+
 // --- Product Data & Rendering ---
 const products = [
     {
@@ -43,11 +106,12 @@ const products = [
 const container = document.getElementById('product-container');
 
 function renderProducts() {
+    if (!container) return;
     container.innerHTML = products.map(p => `
         <div class="product-item">
             <div class="product-image-container">
                 <img src="${p.image}" alt="${p.title}">
-                <div class="add-overlay">In den Warenkorb</div>
+                <div class="add-overlay" onclick="addToCart(${p.id})">In den Warenkorb</div>
             </div>
             <div class="product-details">
                 <div class="product-info">
@@ -76,4 +140,5 @@ function renderProducts() {
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts();
+    updateCartUI();
 });

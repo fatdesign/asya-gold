@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN | ASYA GOLD — Produktmanagement</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background: var(--light-gray);">
+
+    <header class="scrolled">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo">Asya Gold Admin</a>
+            <nav class="nav-links">
+                <a href="index.html">Zur Seite</a>
+                <a href="#" onclick="logout()">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main style="padding-top: 150px;">
+        <div class="container">
+            <div class="admin-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 50px;">
+                
+                <!-- Form: Produkt hinzufügen -->
+                <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
+                    <h3 class="luxury-text" style="font-size: 24px; margin-bottom: 30px;">Produkt hinzufügen</h3>
+                    <form id="add-product-form">
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Produktname</label>
+                            <input type="text" id="title" required style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Kategorie</label>
+                            <select id="category" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
+                                <option>Signature Collection</option>
+                                <option>Fine Necklaces</option>
+                                <option>Timeless Wristwear</option>
+                                <option>Earrings</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Preis (z.B. 1.200 €)</label>
+                            <input type="text" id="price" required style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Bild-URL</label>
+                            <input type="text" id="image" placeholder="images/..." style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
+                        </div>
+                        <button type="submit" class="cta-luxury" style="width: 100%;">Produkt speichern</button>
+                    </form>
+                </div>
+
+                <!-- Liste: Produkte verwalten -->
+                <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
+                    <h3 class="luxury-text" style="font-size: 24px; margin-bottom: 30px;">Inventar verwalten</h3>
+                    <div id="admin-product-list">
+                        <!-- Produkte via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simuliertes Admin-System (In echter Produktion via Cloudflare Worker & D1)
+        let products = JSON.parse(localStorage.getItem('asya_products')) || [
+            { id: 1, title: "L'Aurore Ring", category: "Signature Collection", price: "2.490 €", image: "images/gold_diamond_ring_luxury_1777729778737.png", active: true },
+            { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: "1.850 €", image: "images/gold_necklace_elegant_1777729798075.png", active: true }
+        ];
+
+        function renderAdminList() {
+            const list = document.getElementById('admin-product-list');
+            list.innerHTML = products.map((p, index) => `
+                <div style="display: flex; align-items: center; gap: 20px; padding: 15px 0; border-bottom: 1px solid var(--border);">
+                    <img src="${p.image}" style="width: 50px; height: 60px; object-fit: cover; background: #eee;">
+                    <div style="flex: 1;">
+                        <h4 style="font-family: var(--font-serif); font-size: 18px;">${p.title}</h4>
+                        <p style="font-size: 11px; color: var(--gray); text-transform: uppercase;">${p.category} | ${p.price}</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="toggleActive(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: ${p.active ? '#e1f5fe' : '#ffebee'}; border: none; color: ${p.active ? '#0288d1' : '#c62828'};">
+                            ${p.active ? 'Aktiv' : 'Deaktiviert'}
+                        </button>
+                        <button onclick="deleteProduct(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: #eee; border: none; color: #666;">
+                            Löschen
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Sync mit dem echten Shop-System (für Demo-Zwecke)
+            localStorage.setItem('asya_products', JSON.stringify(products));
+        }
+
+        document.getElementById('add-product-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newProduct = {
+                id: Date.now(),
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                price: document.getElementById('price').value,
+                image: document.getElementById('image').value || 'images/gold_diamond_ring_luxury_1777729778737.png',
+                active: true
+            };
+            products.push(newProduct);
+            renderAdminList();
+            e.target.reset();
+        });
+
+        window.toggleActive = (index) => {
+            products[index].active = !products[index].active;
+            renderAdminList();
+        };
+
+        window.deleteProduct = (index) => {
+            if(confirm('Produkt wirklich löschen?')) {
+                products.splice(index, 1);
+                renderAdminList();
+            }
+        };
+
+        renderAdminList();
+    </script>
+
+</body>
+</html>
