@@ -441,21 +441,20 @@ section {
     margin-bottom: 30px;
 }
 
-/* Lifestyle Centered Section */
+/* Lifestyle Split Section */
 .lifestyle-split {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    text-align: center;
-    margin: 60px 0 120px;
+    gap: 80px;
+    margin: 80px 0 120px;
 }
 
 .lifestyle-split-image {
-    width: 60%; /* Nicht zu breit, für den Fokus */
-    height: 600px;
+    width: 100%;
+    height: 650px;
     overflow: hidden;
-    margin-bottom: 60px;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+    box-shadow: 20px 20px 60px rgba(0,0,0,0.03);
 }
 
 .lifestyle-split-image img {
@@ -470,44 +469,57 @@ section {
 }
 
 .lifestyle-split-content {
-    max-width: 700px;
-    padding: 0 20px;
+    padding-left: 20px;
+    text-align: left;
 }
 
 .lifestyle-split-content span {
     display: block;
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 5px;
+    letter-spacing: 4px;
     color: var(--gold);
     margin-bottom: 20px;
 }
 
 .lifestyle-split-content h2 {
     font-size: 48px;
-    line-height: 1.2;
+    line-height: 1.1;
     margin-bottom: 30px;
     font-weight: 300;
 }
 
 .lifestyle-split-content p {
-    font-size: 18px;
-    line-height: 1.8;
+    font-size: 17px;
+    line-height: 1.7;
     color: var(--gray);
     margin-bottom: 40px;
+    max-width: 480px;
 }
 
-.lifestyle-split-content .cta-luxury {
-    display: inline-block;
+@media (max-width: 1024px) {
+    .lifestyle-split {
+        gap: 50px;
+    }
+    .lifestyle-split-content h2 {
+        font-size: 38px;
+    }
 }
 
 @media (max-width: 768px) {
-    .lifestyle-split-image {
-        width: 100%;
-        height: 400px;
+    .lifestyle-split {
+        grid-template-columns: 1fr;
+        gap: 40px;
     }
-    .lifestyle-split-content h2 {
-        font-size: 32px;
+    .lifestyle-split-content {
+        padding-left: 0;
+        text-align: center;
+    }
+    .lifestyle-split-content p {
+        margin: 0 auto 40px;
+    }
+    .lifestyle-split-image {
+        height: 450px;
     }
 }
 
