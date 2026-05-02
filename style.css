@@ -677,6 +677,37 @@ footer {
     letter-spacing: 3px;
 }
 
+.mobile-nav-link.close-btn {
+    background: none;
+    border: 1px solid rgba(0,0,0,0.05);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--black);
+    position: relative;
+    overflow: hidden;
+}
+
+.close-btn i {
+    font-size: 16px;
+    font-weight: 200; /* Extra dünn */
+    transition: all 0.4s ease;
+}
+
+.close-btn:hover {
+    border-color: var(--gold);
+    transform: rotate(90deg);
+}
+
+.close-btn:hover i {
+    color: var(--gold);
+}
+
 .mobile-menu-overlay .close-btn {
     position: absolute;
     top: 30px;
