@@ -661,10 +661,20 @@ footer {
         justify-content: space-between;
     }
 
+    .nav-actions {
+        order: -1; /* Cart nach links */
+    }
+
+    .menu-toggle {
+        display: block;
+        order: 1; /* Menü nach rechts */
+    }
+
     .logo {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
+        order: 0;
     }
 }
 
