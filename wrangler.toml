@@ -5,7 +5,7 @@ compatibility_date = "2024-05-02"
 [[d1_databases]]
 binding = "DB"
 database_name = "asyagold-db"
-database_id = "DEINE_D1_DATABASE_ID_HIER_EINTRAGEN"
+database_id = "641ce379-8bb2-4a96-9f4c-96d00fa4cbbb"
 
 [[r2_buckets]]
 binding = "ASSETS"
