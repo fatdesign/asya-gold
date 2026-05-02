@@ -441,63 +441,73 @@ section {
     margin-bottom: 30px;
 }
 
-/* Lifestyle Banner */
-.lifestyle-banner {
-    height: 70vh;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    margin: 100px 0;
-    display: flex;
+/* Lifestyle Split Section */
+.lifestyle-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    justify-content: center;
+    gap: 80px;
+    margin: 150px 0;
+    background: var(--white);
 }
 
-.lifestyle-banner-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
+.lifestyle-split-image {
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+}
+
+.lifestyle-split-image img {
     width: 100%;
     height: 100%;
-    background: url('images/asya_lifestyle_banner.png') no-repeat center bottom;
-    background-size: cover;
-    transition: transform 2s ease;
+    object-fit: cover;
+    transition: transform 1.5s ease;
 }
 
-.lifestyle-banner:hover .lifestyle-banner-bg {
+.lifestyle-split:hover .lifestyle-split-image img {
     transform: scale(1.05);
 }
 
-.lifestyle-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    color: var(--white);
-    max-width: 600px;
-    padding: 40px;
+.lifestyle-split-content {
+    padding-right: 50px;
 }
 
-.lifestyle-content h2 {
-    font-size: 42px;
-    margin-bottom: 20px;
-    font-weight: 300;
-    letter-spacing: 2px;
-}
-
-.lifestyle-content p {
+.lifestyle-split-content span {
+    display: block;
     font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 4px;
-    opacity: 0.9;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 20px;
 }
 
-.lifestyle-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.15); /* Sehr dezent um die Details nicht zu verdecken */
+.lifestyle-split-content h2 {
+    font-size: 42px;
+    line-height: 1.2;
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+
+.lifestyle-split-content p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--gray);
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    .lifestyle-split {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin: 80px 0;
+    }
+    .lifestyle-split-content {
+        padding-right: 0;
+        text-align: center;
+    }
+    .lifestyle-split-image {
+        height: 400px;
+    }
 }
 
 /* Product Grid */
