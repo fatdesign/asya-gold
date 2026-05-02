@@ -89,9 +89,14 @@
 
         function renderAdminList() {
             const list = document.getElementById('admin-product-list');
+            if (products.length === 0) {
+                list.innerHTML = `<p style="text-align: center; color: var(--gray); padding: 40px 0;">Keine Produkte vorhanden. <br> <a href="#" onclick="resetToDefaults()" style="color: var(--gold); font-size: 11px; text-transform: uppercase;">Standard-Produkte laden</a></p>`;
+                return;
+            }
+
             list.innerHTML = products.map((p, index) => `
                 <div style="display: flex; align-items: center; gap: 20px; padding: 15px 0; border-bottom: 1px solid var(--border);">
-                    <img src="${p.image}" style="width: 50px; height: 60px; object-fit: cover; background: #eee;">
+                    <img src="${p.image}" onerror="this.src='https://via.placeholder.com/50x60?text=Error'" style="width: 50px; height: 60px; object-fit: cover; background: #eee;">
                     <div style="flex: 1;">
                         <h4 style="font-family: var(--font-serif); font-size: 18px;">${p.title}</h4>
                         <p style="font-size: 11px; color: var(--gray); text-transform: uppercase;">${p.category} | ${formatCurrency(p.price)}</p>
@@ -109,27 +114,41 @@
             localStorage.setItem('asya_products', JSON.stringify(products));
         }
 
+        window.resetToDefaults = () => {
+            if (confirm('Möchten Sie die 8 Standard-Produkte wiederherstellen?')) {
+                products = [...defaultProducts];
+                renderAdminList();
+                location.reload();
+            }
+        };
+
         document.getElementById('add-product-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const editId = document.getElementById('edit-id').value;
+            let imgPath = document.getElementById('image').value.trim() || 'images/gold1.png';
+            
+            // Pfad-Korrektur: Führender Slash weg, .png dran wenn fehlt
+            if (imgPath.startsWith('/')) imgPath = imgPath.substring(1);
+            if (imgPath && !imgPath.includes('.')) imgPath += '.png';
+            if (imgPath.startsWith('images/') === false && !imgPath.startsWith('http')) imgPath = 'images/' + imgPath;
+
             const productData = {
                 title: document.getElementById('title').value,
                 category: document.getElementById('category').value,
                 price: parseFloat(document.getElementById('price').value),
-                image: document.getElementById('image').value || 'images/gold_diamond_ring_luxury_1777729778737.png',
+                image: imgPath,
                 active: true
             };
 
             if (editId) {
-                // Bearbeiten
                 const index = products.findIndex(p => p.id == editId);
                 products[index] = { ...products[index], ...productData };
             } else {
-                // Neu hinzufügen
                 productData.id = Date.now();
                 products.push(productData);
             }
 
+            localStorage.setItem('asya_products', JSON.stringify(products));
             resetForm();
             renderAdminList();
         });

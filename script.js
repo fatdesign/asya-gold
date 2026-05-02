@@ -123,12 +123,21 @@ const container = document.getElementById('product-container');
 function renderProducts() {
     if (!container) return;
     
-    const activeProducts = products.filter(p => p.active);
+    // Aktuelle Daten laden
+    products = JSON.parse(localStorage.getItem('asya_products')) || defaultProducts;
+    const activeProducts = products.filter(p => p.active !== false);
+    
+    console.log("Rendering Products:", activeProducts);
+
+    if (activeProducts.length === 0) {
+        container.innerHTML = `<p style="text-align: center; grid-column: 1/-1; color: var(--gray); padding: 100px 0;">Momentan sind keine Produkte in dieser Kategorie verfügbar.</p>`;
+        return;
+    }
     
     container.innerHTML = activeProducts.map(p => `
         <div class="product-item">
             <div class="product-image-container">
-                <img src="${p.image}" alt="${p.title}">
+                <img src="${p.image}" alt="${p.title}" onerror="this.src='https://via.placeholder.com/400x500?text=Bild+nicht+gefunden'">
                 <div class="add-overlay" onclick="addToCart(${p.id})">In den Warenkorb</div>
             </div>
             <div class="product-details">
