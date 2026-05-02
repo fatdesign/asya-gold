@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOP | ASYA GOLD — Exklusive Kollektionen</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header id="header" class="scrolled"> <!-- Immer scrolled auf Shop Seite für Sichtbarkeit -->
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo">Asya Gold</a>
+            
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="shop.html" class="active">Kollektion</a>
+                <a href="#bespoke">Bespoke</a>
+                <a href="#kontakt">Kontakt</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="cart-btn">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding-top: 150px;">
+        <section class="container">
+            <div class="section-intro">
+                <span>Alle Kostbarkeiten</span>
+                <h2>Unsere Online-Boutique</h2>
+                <div class="shop-filters" style="margin-top: 40px; display: flex; justify-content: center; gap: 30px;">
+                    <a href="#" class="filter-link active">Alle</a>
+                    <a href="#" class="filter-link">Ringe</a>
+                    <a href="#" class="filter-link">Halsketten</a>
+                    <a href="#" class="filter-link">Armbänder</a>
+                    <a href="#" class="filter-link">Ohrringe</a>
+                </div>
+            </div>
+
+            <div class="product-grid" id="product-container">
+                <!-- Produkte werden via JS geladen -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>ASYA GOLD</h2>
+                    <p>Feinster Goldschmuck für Momente, die bleiben.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="#">Ringe</a></li>
+                        <li><a href="#">Ketten</a></li>
+                        <li><a href="#">Ohrringe</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Info</h4>
+                    <ul>
+                        <li><a href="#">Versand</a></li>
+                        <li><a href="#">Größen</a></li>
+                        <li><a href="#">Kontakt</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 ASYA GOLD. Handmade with Love.
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .filter-link {
+            text-decoration: none;
+            color: var(--gray);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: var(--transition);
+            border-bottom: 1px solid transparent;
+            padding-bottom: 5px;
+        }
+        .filter-link:hover, .filter-link.active {
+            color: var(--gold);
+            border-bottom: 1px solid var(--gold);
+        }
+        .nav-links a.active {
+            color: var(--gold);
+        }
+    </style>
+
+    <script src="script.js"></script>
+</body>
+</html>

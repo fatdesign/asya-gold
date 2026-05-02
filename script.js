@@ -1,72 +1,79 @@
-// Beispiel-Produktdaten (Später kommen diese aus der Cloudflare D1 Datenbank)
+// --- Scroll Effects ---
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+});
+
+// --- Product Data & Rendering ---
 const products = [
     {
         id: 1,
-        title: "Klassischer Diamantring",
-        category: "Ringe",
-        price: "1.299,00 €",
+        title: "L'Aurore Ring",
+        category: "Signature Collection",
+        price: "2.490 €",
         image: "images/gold_diamond_ring_luxury_1777729778737.png"
     },
     {
         id: 2,
-        title: "Elegante Goldkette",
-        category: "Ketten",
-        price: "849,00 €",
+        title: "Étoile Collier",
+        category: "Fine Necklaces",
+        price: "1.850 €",
         image: "images/gold_necklace_elegant_1777729798075.png"
     },
     {
         id: 3,
-        title: "Goldenes Armband-Set",
-        category: "Armbänder",
-        price: "599,00 €",
+        title: "Océan Bracelet",
+        category: "Timeless Wristwear",
+        price: "3.200 €",
         image: "images/gold_bracelet_set_1777729811867.png"
     },
     {
         id: 4,
-        title: "Minimalistische Creolen",
-        category: "Ohrringe",
-        price: "329,00 €",
+        title: "Lumière Hoops",
+        category: "Earrings",
+        price: "950 €",
         image: "images/gold_earrings_minimalist_1777729825390.png"
     }
 ];
 
-// DOM Elemente
-const productContainer = document.getElementById('product-container');
-const cartCount = document.getElementById('cart-count');
+const container = document.getElementById('product-container');
 
-let cart = [];
-
-// Produkte rendern
 function renderProducts() {
-    productContainer.innerHTML = products.map(product => `
-        <div class="product-card animate-fade">
-            <img src="${product.image}" alt="${product.title}" class="product-image">
-            <div class="product-info">
-                <div class="product-category">${product.category}</div>
-                <h3 class="product-title">${product.title}</h3>
-                <div class="product-price">${product.price}</div>
-                <button class="btn-add" onclick="addToCart(${product.id})">In den Warenkorb</button>
+    container.innerHTML = products.map(p => `
+        <div class="product-item">
+            <div class="product-image-container">
+                <img src="${p.image}" alt="${p.title}">
+                <div class="add-overlay">In den Warenkorb</div>
+            </div>
+            <div class="product-details">
+                <div class="product-info">
+                    <p>${p.category}</p>
+                    <h3>${p.title}</h3>
+                </div>
+                <div class="product-price">${p.price}</div>
             </div>
         </div>
     `).join('');
+
+    // Intersection Observer for reveal animation
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.product-item').forEach(item => {
+        observer.observe(item);
+    });
 }
 
-// Warenkorb Logik
-window.addToCart = (productId) => {
-    const product = products.find(p => p.id === productId);
-    cart.push(product);
-    updateCart();
-};
-
-function updateCart() {
-    cartCount.innerText = cart.length;
-    
-    // Animation für den Warenkorb
-    cartCount.classList.add('bump');
-    setTimeout(() => cartCount.classList.remove('bump'), 300);
-}
-
-// Initialisierung
+// Initial Load
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts();
 });

@@ -3,65 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASYA GOLD | Exklusiver Goldschmuck</title>
-    <meta name="description" content="Entdecken Sie exklusiven Goldschmuck und zeitlose Eleganz bei ASYA GOLD. Ringe, Ketten und mehr in feinster Qualität.">
+    <title>ASYA GOLD | Feiner Goldschmuck & Zeitlose Eleganz</title>
+    <meta name="description" content="Erleben Sie die Symbiose aus traditioneller Handwerkskunst und modernem Luxus. Exklusiver Goldschmuck für höchste Ansprüche.">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <header>
+    <!-- Navigation -->
+    <header id="header">
         <div class="container nav-wrapper">
-            <a href="#" class="logo">ASYA GOLD</a>
+            <a href="#" class="logo">Asya Gold</a>
+            
             <nav class="nav-links">
-                <a href="#kategorie-ringe">Ringe</a>
-                <a href="#kategorie-ketten">Ketten</a>
-                <a href="#">Über uns</a>
-                <a href="#">Kontakt</a>
+                <a href="#kollektion">Kollektion</a>
+                <a href="#atelier">Das Atelier</a>
+                <a href="#bespoke">Bespoke</a>
+                <a href="#kontakt">Kontakt</a>
             </nav>
-            <div class="cart-icon">
-                <i class="fas fa-shopping-bag"></i>
-                <span id="cart-count">0</span>
+
+            <div class="nav-actions">
+                <button class="cart-btn">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
             </div>
         </div>
     </header>
 
     <main>
+        <!-- Hero Section -->
         <section class="hero">
-            <div class="container animate-fade">
-                <h1>Zeitlose Eleganz in Gold</h1>
-                <p>Handverlesene Schmuckstücke für die besonderen Momente im Leben. Entdecken Sie unsere neue Kollektion.</p>
-                <a href="#kollektion" class="btn-add" style="display: inline-block; width: auto; padding: 16px 40px;">Jetzt Entdecken</a>
+            <div class="hero-content">
+                <p>Est. 2026 — Fine Jewelry</p>
+                <h1>Meisterstücke <br> <span class="gold-text">aus Gold.</span></h1>
+                <a href="shop.html" class="cta-luxury">Entdecken</a>
             </div>
         </section>
 
-        <section id="kollektion" class="container">
-            <div class="section-title">
-                <h2>Unsere Kollektion</h2>
-            </div>
+        <div class="noble-divider"></div>
 
-            <div class="product-grid" id="product-container">
-                <!-- Produkte werden via JS geladen -->
+        <!-- Intro Section -->
+        <section id="atelier">
+            <div class="container">
+                <div class="section-intro">
+                    <span>Unsere Philosophie</span>
+                    <h2>Handwerkskunst, die Generationen überdauert.</h2>
+                    <p>Bei ASYA GOLD verschmilzt Leidenschaft mit reinster Qualität. Jedes Stück ist ein Unikat, handgefertigt in unserem Atelier, um Ihre Persönlichkeit zum Strahlen zu bringen.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="noble-divider"></div>
+
+        <!-- Collection Section -->
+        <section id="kollektion">
+            <div class="container">
+                <div class="section-intro">
+                    <span>Exklusive Auswahl</span>
+                    <h2>Die Kollektion</h2>
+                </div>
+
+                <div class="product-grid" id="product-container">
+                    <!-- Produkte werden dynamisch geladen -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section style="background: var(--near-black); padding: 100px 0;">
+            <div class="container" style="text-align: center;">
+                <h2 class="luxury-text" style="font-size: 40px; margin-bottom: 30px;">Ihr Traum in Gold?</h2>
+                <p style="margin-bottom: 40px; color: var(--gray);">Kontaktieren Sie uns für individuelle Sonderanfertigungen.</p>
+                <a href="#" class="cta-luxury">Beratungstermin vereinbaren</a>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="footer-logo">ASYA GOLD</div>
-            <div class="footer-links">
-                <a href="#">Impressum</a>
-                <a href="#">Datenschutz</a>
-                <a href="#">AGB</a>
-                <a href="#">Versandinfo</a>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>ASYA GOLD</h2>
+                    <p>Qualität und Eleganz für den anspruchsvollen Geschmack.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Kollektionen</h4>
+                    <ul>
+                        <li><a href="#">Signature Ringe</a></li>
+                        <li><a href="#">Halsketten</a></li>
+                        <li><a href="#">Ohrringe</a></li>
+                        <li><a href="#">Limited Edition</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Service</h4>
+                    <ul>
+                        <li><a href="#">Versand & Retoure</a></li>
+                        <li><a href="#">Größenberater</a></li>
+                        <li><a href="#">Zahlungsarten</a></li>
+                        <li><a href="#">Pflegehinweise</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Rechtliches</h4>
+                    <ul>
+                        <li><a href="#">Impressum</a></li>
+                        <li><a href="#">Datenschutz</a></li>
+                        <li><a href="#">AGB</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="copyright">
-                &copy; 2026 ASYA GOLD. Alle Rechte vorbehalten. Designed with Elegance.
+            
+            <div class="footer-bottom">
+                <div>&copy; 2026 ASYA GOLD — ALL RIGHTS RESERVED.</div>
+                <div>Innsbruck | Salzburg | Wien</div>
             </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="script.js"></script>
 </body>
 </html>
