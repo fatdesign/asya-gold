@@ -9,12 +9,12 @@
 </head>
 <body style="background: var(--cream);">
 
-    <header class="scrolled" style="top: 0 !important;">
-        <div class="container nav-wrapper">
-            <a href="index.html" class="logo" style="font-family: var(--font-serif); letter-spacing: 2px; text-transform: uppercase; font-weight: 400;">Asya Gold <span style="font-size: 12px; font-family: var(--font-sans); letter-spacing: 1px; margin-left: 10px; opacity: 0.6;">Admin Panel</span></a>
-            <nav class="nav-links">
-                <a href="index.html">Zur Website</a>
-                <a href="shop.html">Shop-Ansicht</a>
+    <header class="scrolled" style="top: 0 !important; background: var(--white); border-bottom: 1px solid var(--border);">
+        <div class="container nav-wrapper" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" style="font-family: var(--font-serif); font-size: 24px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; color: #000; font-weight: 400;">Admin Panel</a>
+            <nav class="nav-links" style="display: flex; gap: 30px;">
+                <a href="index.html" style="text-decoration: none; color: #000; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Zur Website</a>
+                <a href="shop.html" style="text-decoration: none; color: #000; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Shop-Ansicht</a>
             </nav>
         </div>
     </header>
@@ -156,10 +156,10 @@
                                     </span>
                                 </td>
                                 <td style="padding: 15px; text-align: right;">
-                                    <div style="display: flex; gap: 5px; justify-content: flex-end;">
-                                        <button onclick="editProduct(${index})" style="background: var(--near-black); color: white; border: none; padding: 8px 12px; font-size: 9px; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;">Bearbeiten</button>
-                                        <button onclick="toggleActive(${p.id}, ${p.active})" style="background: #eee; border: none; padding: 8px 12px; font-size: 9px; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;">${p.active ? 'Deaktivieren' : 'Aktivieren'}</button>
-                                        <button onclick="deleteProduct(${p.id})" style="background: #fff; border: 1px solid #ddd; color: #999; padding: 8px 12px; font-size: 9px; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;">Löschen</button>
+                                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                        <button onclick="editProduct(${index})" style="background: #000; color: #fff; border: none; padding: 10px 15px; font-size: 10px; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; font-weight: 600;">Bearbeiten</button>
+                                        <button onclick="toggleActive(${p.id}, ${p.active})" style="background: #f0f0f0; border: 1px solid #ddd; padding: 10px 15px; font-size: 10px; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;">${p.active ? 'Deaktivieren' : 'Aktivieren'}</button>
+                                        <button onclick="deleteProduct(${p.id})" style="background: #fff; border: 1px solid #ffcdd2; color: #c62828; padding: 10px 15px; font-size: 10px; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;">Löschen</button>
                                     </div>
                                 </td>
                             </tr>
