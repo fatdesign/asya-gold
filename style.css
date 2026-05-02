@@ -65,59 +65,67 @@ h1, h2, h3, .luxury-text {
 
 /* Header */
 header {
-    height: 100px;
-    display: flex;
-    align-items: center;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
-    transition: var(--transition);
-    border-bottom: 1px solid transparent;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-section {
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
+    background: transparent;
+    transition: all 0.5s ease;
+}
+
+.main-logo img {
+    height: 140px; /* Jetzt richtig groß und luxuriös */
+    width: auto;
+    transition: all 0.5s ease;
+}
+
+.nav-bar {
+    padding: 15px 0;
+    transition: all 0.5s ease;
 }
 
 header.scrolled {
-    height: 70px;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(15px);
-    border-bottom: 1px solid var(--border);
+    box-shadow: 0 5px 30px rgba(0,0,0,0.05);
+}
+
+header.scrolled .logo-section {
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+header.scrolled .nav-bar {
+    padding: 15px 0;
 }
 
 .nav-wrapper {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Navigation zentrieren */
     align-items: center;
+    position: relative;
 }
 
-.logo {
-    font-family: var(--font-serif);
-    font-size: 28px;
-    font-weight: 500;
-    text-decoration: none;
-    color: var(--black);
-    letter-spacing: 2px;
-    z-index: 10;
-    display: flex;
-    align-items: center;
+.nav-actions {
+    position: absolute;
+    right: 0;
 }
 
-.logo img {
-    height: 100px; /* Deutlich größer auf Desktop */
-    width: auto;
-    display: block;
-    transition: all 0.3s ease;
-}
-
-header.scrolled .logo img {
-    height: 70px; /* Immer noch gut sichtbar beim Scrollen */
-}
-
-@media (max-width: 768px) {
-    .logo img {
-        height: 70px; /* Optimiert für Handy */
-    }
+.menu-toggle {
+    position: absolute;
+    left: 0;
 }
 
 .nav-links {
@@ -676,24 +684,31 @@ footer {
         width: 100%;
     }
 
+    .logo-section {
+        padding: 20px 0;
+    }
+
+    .main-logo img {
+        height: 80px;
+    }
+
+    header.scrolled .logo-section {
+        display: none;
+    }
+
     .nav-wrapper {
         justify-content: space-between;
     }
 
     .nav-actions {
-        order: -1; /* Cart nach links */
+        position: static;
+        order: -1;
     }
 
     .menu-toggle {
+        position: static;
         display: block;
-        order: 1; /* Menü nach rechts */
-    }
-
-    .logo {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        order: 0;
+        order: 1;
     }
 }
 
