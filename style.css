@@ -102,10 +102,8 @@ header.scrolled .header-top {
 }
 
 header.scrolled .header-bottom {
-    height: 0px;
-    overflow: hidden;
-    border: none;
-    padding: 0;
+    height: 38px;
+    background: rgba(255, 252, 245, 0.99);
 }
 
 .nav-wrapper {
