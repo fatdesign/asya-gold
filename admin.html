@@ -9,9 +9,9 @@
 </head>
 <body style="background: var(--cream);">
 
-    <header class="scrolled">
+    <header class="scrolled" style="top: 0 !important;">
         <div class="container nav-wrapper">
-            <a href="index.html" class="logo">Admin Panel</a>
+            <a href="index.html" class="logo" style="font-family: var(--font-serif); letter-spacing: 2px; text-transform: uppercase; font-weight: 400;">Asya Gold <span style="font-size: 12px; font-family: var(--font-sans); letter-spacing: 1px; margin-left: 10px; opacity: 0.6;">Admin Panel</span></a>
             <nav class="nav-links">
                 <a href="index.html">Zur Website</a>
                 <a href="shop.html">Shop-Ansicht</a>
@@ -19,74 +19,78 @@
         </div>
     </header>
 
-    <main style="padding-top: 120px;">
+    <main style="padding-top: 100px;">
         <div class="container">
-            <div class="admin-grid" style="display: grid; grid-template-columns: 400px 1fr; gap: 50px;">
+            <!-- Top Row: Settings & Forms -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px;">
                 
                 <!-- Form: Produkt hinzufügen / bearbeiten -->
                 <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
-                    <h3 class="luxury-text" id="form-title" style="font-size: 24px; margin-bottom: 30px;">Produkt hinzufügen</h3>
+                    <h3 class="luxury-text" id="form-title" style="font-size: 20px; margin-bottom: 30px;">Produkt verwalten</h3>
                     <form id="add-product-form">
                         <input type="hidden" id="edit-id">
-                        <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Produktname</label>
-                            <input type="text" id="title" required style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Produktname</label>
+                                <input type="text" id="title" required style="width: 100%; padding: 10px; border: 1px solid var(--border);">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Kategorie</label>
+                                <select id="category" style="width: 100%; padding: 10px; border: 1px solid var(--border);">
+                                    <option>Signature Collection</option>
+                                    <option>Fine Necklaces</option>
+                                    <option>Timeless Wristwear</option>
+                                    <option>Earrings</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Kategorie</label>
-                            <select id="category" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
-                                <option>Signature Collection</option>
-                                <option>Fine Necklaces</option>
-                                <option>Timeless Wristwear</option>
-                                <option>Earrings</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Preis (nur Ziffern)</label>
-                            <input type="number" id="price" step="0.01" required placeholder="z.B. 1290" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Lagerbestand</label>
-                            <input type="number" id="stock" required value="10" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Preis (€)</label>
+                                <input type="number" id="price" step="0.01" required style="width: 100%; padding: 10px; border: 1px solid var(--border);">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Lagerbestand</label>
+                                <input type="number" id="stock" required style="width: 100%; padding: 10px; border: 1px solid var(--border);">
+                            </div>
                         </div>
                         
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Produktbild Hochladen (R2)</label>
-                            <input type="file" id="image-file" accept="image/*" style="width: 100%; padding: 10px; border: 1px dashed var(--gold); background: #fffcf5;">
-                            <p style="font-size: 10px; color: var(--gray); margin-top: 5px;">Oder Bild-URL direkt eingeben:</p>
-                            <input type="text" id="image-url" placeholder="https://..." style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans); margin-top: 5px;">
+                            <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Bild Upload</label>
+                            <input type="file" id="image-file" accept="image/*" style="width: 100%; font-size: 11px;">
+                            <input type="text" id="image-url" placeholder="Oder Bild-URL..." style="width: 100%; padding: 10px; border: 1px solid var(--border); margin-top: 10px;">
                         </div>
 
-                        <button type="submit" id="submit-btn" class="cta-luxury" style="width: 100%;">Produkt speichern</button>
-                        <button type="button" id="cancel-btn" style="width: 100%; margin-top: 10px; background: none; border: none; font-size: 11px; cursor: pointer; color: var(--gray); display: none;" onclick="resetForm()">Abbrechen</button>
+                        <button type="submit" id="submit-btn" class="cta-luxury" style="width: 100%; padding: 15px;">Speichern</button>
+                        <button type="button" id="cancel-btn" style="width: 100%; margin-top: 10px; background: none; border: none; font-size: 10px; cursor: pointer; color: var(--gray); display: none;" onclick="resetForm()">Abbrechen</button>
                     </form>
                 </div>
 
                 <!-- Marquee Settings -->
                 <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                        <h3 class="luxury-text" style="font-size: 24px; margin: 0;">Ankündigungsleiste</h3>
-                        <label style="display: flex; align-items: center; gap: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;">
-                            <input type="checkbox" id="marquee-active" checked> Aktivieren
+                        <h3 class="luxury-text" style="font-size: 20px; margin: 0;">Ankündigungsleiste</h3>
+                        <label style="display: flex; align-items: center; gap: 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;">
+                            <input type="checkbox" id="marquee-active"> Aktiv
                         </label>
                     </div>
                     <div class="form-group" style="margin-bottom: 20px;">
-                        <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Text der Laufleiste</label>
-                        <textarea id="marquee-input" rows="3" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans); resize: vertical;"></textarea>
+                        <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Text der Laufleiste</label>
+                        <textarea id="marquee-input" rows="4" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);"></textarea>
                     </div>
-                    <button onclick="updateSettings()" id="save-settings-btn" class="cta-luxury" style="width: 100%;">Speichern</button>
-                    <p style="font-size: 10px; color: var(--gray); margin-top: 10px;">Tipp: Nutze • oder | als Trenner zwischen den Sätzen.</p>
+                    <button onclick="updateSettings()" id="save-settings-btn" class="cta-luxury" style="width: 100%; padding: 15px;">Marquee aktualisieren</button>
                 </div>
+            </div>
 
-                <!-- Liste: Produkte verwalten -->
-                <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
-                    <h3 class="luxury-text" style="font-size: 24px; margin-bottom: 30px;">Inventar verwalten</h3>
-                    <div id="admin-product-list">
-                        <!-- Produkte via JS -->
-                    </div>
+            <!-- Bottom Row: Inventory (Full Width) -->
+            <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h3 class="luxury-text" style="font-size: 24px; margin: 0;">Inventar verwalten</h3>
+                    <span style="font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px;" id="product-count">0 Produkte</span>
                 </div>
-
+                <div id="admin-product-list">
+                    <!-- Produkte via JS -->
+                </div>
             </div>
         </div>
     </main>
@@ -111,31 +115,58 @@
 
         function renderAdminList() {
             const list = document.getElementById('admin-product-list');
+            document.getElementById('product-count').innerText = `${products.length} Produkte`;
+            
             if (products.length === 0) {
                 list.innerHTML = `<p style="text-align: center; color: var(--gray); padding: 40px 0;">Keine Produkte in der Datenbank.</p>`;
                 return;
             }
 
-            list.innerHTML = products.map((p, index) => `
-                <div style="display: flex; align-items: center; gap: 20px; padding: 15px 0; border-bottom: 1px solid var(--border);">
-                    <img src="${p.image_url}" onerror="this.src='https://via.placeholder.com/50x60?text=Error'" style="width: 50px; height: 60px; object-fit: cover; background: #eee;">
-                    <div style="flex: 1;">
-                        <h4 style="font-family: var(--font-serif); font-size: 18px;">${p.title}</h4>
-                        <p style="font-size: 11px; color: var(--gray); text-transform: uppercase;">${p.category} | ${formatCurrency(p.price)}</p>
-                    </div>
-                    <div style="text-align: right; margin-right: 20px;">
-                        <span style="display: block; font-size: 10px; color: var(--gray); text-transform: uppercase;">Bestand</span>
-                        <span style="font-weight: 700; color: ${p.stock <= 3 ? '#c62828' : 'var(--black)'}">${p.stock}</span>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <button onclick="editProduct(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: #eee; border: none;">Bearbeiten</button>
-                        <button onclick="toggleActive(${p.id}, ${p.active})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: ${p.active ? '#e1f5fe' : '#ffebee'}; border: none; color: ${p.active ? '#0288d1' : '#c62828'};">
-                            ${p.active ? 'Aktiv' : 'Inaktiv'}
-                        </button>
-                        <button onclick="deleteProduct(${p.id})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: #fff; border: 1px solid #eee; color: #999;">Löschen</button>
-                    </div>
-                </div>
-            `).join('');
+            list.innerHTML = `
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--gray);">
+                            <th style="padding: 15px 0;">Bild</th>
+                            <th style="padding: 15px;">Produkt / Kategorie</th>
+                            <th style="padding: 15px;">Preis</th>
+                            <th style="padding: 15px;">Bestand</th>
+                            <th style="padding: 15px;">Status</th>
+                            <th style="padding: 15px; text-align: right;">Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${products.map((p, index) => `
+                            <tr style="border-bottom: 1px solid #f5f5f5; transition: background 0.3s;">
+                                <td style="padding: 15px 0;">
+                                    <img src="${p.image_url}" onerror="this.src='https://via.placeholder.com/50x60?text=Error'" style="width: 50px; height: 60px; object-fit: cover; background: #eee; border: 1px solid #eee;">
+                                </td>
+                                <td style="padding: 15px;">
+                                    <h4 style="font-family: var(--font-serif); font-size: 16px; margin: 0;">${p.title}</h4>
+                                    <span style="font-size: 10px; color: var(--gray); text-transform: uppercase;">${p.category}</span>
+                                </td>
+                                <td style="padding: 15px; font-weight: 600;">${formatCurrency(p.price)}</td>
+                                <td style="padding: 15px;">
+                                    <span style="display: inline-block; padding: 4px 8px; font-size: 11px; font-weight: 700; background: ${p.stock <= 3 ? '#ffebee' : '#f5f5f5'}; color: ${p.stock <= 3 ? '#c62828' : 'var(--black)'};">
+                                        ${p.stock} Stk.
+                                    </span>
+                                </td>
+                                <td style="padding: 15px;">
+                                    <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: ${p.active ? '#2e7d32' : '#c62828'}">
+                                        ${p.active ? '● Aktiv' : '○ Inaktiv'}
+                                    </span>
+                                </td>
+                                <td style="padding: 15px; text-align: right;">
+                                    <div style="display: flex; gap: 5px; justify-content: flex-end;">
+                                        <button onclick="editProduct(${index})" style="background: var(--near-black); color: white; border: none; padding: 8px 12px; font-size: 9px; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;">Bearbeiten</button>
+                                        <button onclick="toggleActive(${p.id}, ${p.active})" style="background: #eee; border: none; padding: 8px 12px; font-size: 9px; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;">${p.active ? 'Deaktivieren' : 'Aktivieren'}</button>
+                                        <button onclick="deleteProduct(${p.id})" style="background: #fff; border: 1px solid #ddd; color: #999; padding: 8px 12px; font-size: 9px; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;">Löschen</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
         }
 
         document.getElementById('add-product-form').addEventListener('submit', async (e) => {
