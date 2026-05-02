@@ -71,43 +71,79 @@ window.removeFromCart = (index) => {
     updateCartUI();
 };
 
+// --- Checkout ---
+window.startCheckout = () => {
+    if (cart.length === 0) {
+        alert('Ihr Warenkorb ist leer.');
+        return;
+    }
+    
+    // Simulations-Effekt
+    const btn = document.querySelector('.cart-footer .cta-luxury');
+    btn.innerText = 'Verarbeite...';
+    btn.disabled = true;
+
+    setTimeout(() => {
+        alert('Vielen Dank für Ihre Bestellung! Wir leiten Sie nun zur sicheren Zahlung weiter (Stripe-Simulation).');
+        cart = [];
+        updateCartUI();
+        toggleCart();
+        btn.innerText = 'Zur Kasse';
+        btn.disabled = false;
+    }, 1500);
+};
+
 // --- Product Data & Rendering ---
-const products = [
+// Wir laden die Produkte aus dem LocalStorage, damit Admin-Änderungen sofort sichtbar sind.
+const defaultProducts = [
     {
         id: 1,
         title: "L'Aurore Ring",
         category: "Signature Collection",
         price: "2.490 €",
-        image: "images/gold_diamond_ring_luxury_1777729778737.png"
+        image: "images/gold_diamond_ring_luxury_1777729778737.png",
+        active: true
     },
     {
         id: 2,
         title: "Étoile Collier",
         category: "Fine Necklaces",
         price: "1.850 €",
-        image: "images/gold_necklace_elegant_1777729798075.png"
+        image: "images/gold_necklace_elegant_1777729798075.png",
+        active: true
     },
     {
         id: 3,
         title: "Océan Bracelet",
         category: "Timeless Wristwear",
         price: "3.200 €",
-        image: "images/gold_bracelet_set_1777729811867.png"
+        image: "images/gold_bracelet_set_1777729811867.png",
+        active: true
     },
     {
         id: 4,
         title: "Lumière Hoops",
         category: "Earrings",
         price: "950 €",
-        image: "images/gold_earrings_minimalist_1777729825390.png"
+        image: "images/gold_earrings_minimalist_1777729825390.png",
+        active: true
     }
 ];
+
+let products = JSON.parse(localStorage.getItem('asya_products')) || defaultProducts;
+if (!localStorage.getItem('asya_products')) {
+    localStorage.setItem('asya_products', JSON.stringify(defaultProducts));
+}
 
 const container = document.getElementById('product-container');
 
 function renderProducts() {
     if (!container) return;
-    container.innerHTML = products.map(p => `
+    
+    // Nur aktive Produkte im Shop anzeigen
+    const activeProducts = products.filter(p => p.active);
+    
+    container.innerHTML = activeProducts.map(p => `
         <div class="product-item">
             <div class="product-image-container">
                 <img src="${p.image}" alt="${p.title}">

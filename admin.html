@@ -65,11 +65,15 @@
     </main>
 
     <script>
-        // Simuliertes Admin-System (In echter Produktion via Cloudflare Worker & D1)
-        let products = JSON.parse(localStorage.getItem('asya_products')) || [
+        // Admin-System synchronisiert mit dem Shop
+        const defaultProducts = [
             { id: 1, title: "L'Aurore Ring", category: "Signature Collection", price: "2.490 €", image: "images/gold_diamond_ring_luxury_1777729778737.png", active: true },
-            { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: "1.850 €", image: "images/gold_necklace_elegant_1777729798075.png", active: true }
+            { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: "1.850 €", image: "images/gold_necklace_elegant_1777729798075.png", active: true },
+            { id: 3, title: "Océan Bracelet", category: "Timeless Wristwear", price: "3.200 €", image: "images/gold_bracelet_set_1777729811867.png", active: true },
+            { id: 4, title: "Lumière Hoops", category: "Earrings", price: "950 €", image: "images/gold_earrings_minimalist_1777729825390.png", active: true }
         ];
+
+        let products = JSON.parse(localStorage.getItem('asya_products')) || defaultProducts;
 
         function renderAdminList() {
             const list = document.getElementById('admin-product-list');
