@@ -115,16 +115,22 @@
 
         document.getElementById('add-product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            console.log("Submit-Event ausgelöst.");
+            
             const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.innerText;
             submitBtn.innerText = "Speichere...";
             submitBtn.disabled = true;
 
             const editId = document.getElementById('edit-id').value;
-            let finalImageUrl = document.getElementById('image-url').value;
+            let finalImageUrl = document.getElementById('image-url').value.trim();
             const imageFile = document.getElementById('image-file').files[0];
+
+            console.log("Input Daten:", { editId, finalImageUrl, hasFile: !!imageFile });
 
             // 1. Wenn ein File ausgewählt wurde, zu R2 hochladen
             if (imageFile) {
+                console.log("Starte Bild-Upload...");
                 const formData = new FormData();
                 formData.append('file', imageFile);
                 try {
@@ -132,19 +138,22 @@
                         method: 'POST',
                         body: formData
                     });
+                    if (!uploadRes.ok) throw new Error("Upload fehlgeschlagen");
                     const uploadData = await uploadRes.json();
                     finalImageUrl = uploadData.url;
+                    console.log("Upload erfolgreich:", finalImageUrl);
                 } catch (err) {
-                    alert("Upload fehlgeschlagen!");
+                    console.error("Upload-Fehler:", err);
+                    alert("Upload fehlgeschlagen: " + err.message);
                     submitBtn.disabled = false;
-                    submitBtn.innerText = "Produkt speichern";
+                    submitBtn.innerText = originalText;
                     return;
                 }
             }
 
             // 2. Produktdaten an Worker senden
             const productData = {
-                id: editId || null,
+                id: editId ? parseInt(editId) : null,
                 title: document.getElementById('title').value,
                 category: document.getElementById('category').value,
                 price: parseFloat(document.getElementById('price').value),
@@ -152,19 +161,32 @@
                 active: true
             };
 
+            console.log("Sende Produkt-Daten:", productData);
+
             try {
-                await fetch(`${API_URL}/products`, {
+                const response = await fetch(`${API_URL}/products`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(productData)
                 });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error("Server-Fehler: " + errorText);
+                }
+                
+                const resData = await response.json();
+                console.log("Server-Antwort:", resData);
+
+                alert("Erfolgreich gespeichert!");
                 resetForm();
                 fetchProducts();
             } catch (err) {
-                alert("Speichern fehlgeschlagen!");
+                console.error("Speicher-Fehler:", err);
+                alert("Speichern fehlgeschlagen: " + err.message);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerText = "Produkt speichern";
+                submitBtn.innerText = originalText;
             }
         });
 
