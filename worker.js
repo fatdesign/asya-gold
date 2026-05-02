@@ -29,14 +29,14 @@ export default {
         const data = await request.json();
         const { id, title, category, price, image, active } = data;
 
-        if (id && id > 1000000000) { // Einfache Logik für "Existiert bereits" (Date.now() IDs)
-           // Check if exists
+        if (id) {
+           console.log("Prüfe Update für ID:", id);
            const existing = await env.DB.prepare("SELECT id FROM products WHERE id = ?").bind(id).first();
            if (existing) {
               await env.DB.prepare(
                 "UPDATE products SET title = ?, category = ?, price = ?, image_url = ?, active = ? WHERE id = ?"
               ).bind(title, category, price, image, active ? 1 : 0, id).run();
-              return new Response(JSON.stringify({ success: true, message: "Updated" }), { headers: corsHeaders });
+              return new Response(JSON.stringify({ success: true, message: "Produkt aktualisiert", id: id }), { headers: corsHeaders });
            }
         }
 

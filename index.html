@@ -18,12 +18,11 @@
     <div class="cart-overlay" id="cart-overlay"></div>
     <div class="cart-drawer" id="cart-drawer">
         <div class="cart-header">
-            <h3>Ihr Warenkorb</h3>
-            <button class="close-cart" id="close-cart"><i class="fa-solid fa-xmark"></i></button>
+            <h3>Warenkorb</h3>
+            <button class="close-btn" id="close-cart"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="cart-items" id="cart-items-container">
             <!-- Items via JS -->
-            <p style="text-align: center; color: var(--gray); margin-top: 50px;">Ihr Warenkorb ist noch leer.</p>
         </div>
         <div class="cart-footer">
             <div class="cart-total">
@@ -34,16 +33,29 @@
         </div>
     </div>
 
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobile-menu">
+        <button class="close-btn" id="close-mobile-menu"><i class="fa-solid fa-xmark"></i></button>
+        <nav class="mobile-nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="#atelier">Über uns</a>
+            <a href="#">Kontakt</a>
+        </nav>
+    </div>
+
     <!-- Navigation -->
     <header id="header">
         <div class="container nav-wrapper">
-            <a href="#" class="logo">Asya Gold</a>
+            <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+            
+            <a href="index.html" class="logo">Asya Gold</a>
             
             <nav class="nav-links">
-                <a href="index.html">Home</a>
+                <a href="index.html" class="active">Home</a>
                 <a href="shop.html">Shop</a>
                 <a href="#atelier">Über uns</a>
-                <a href="#kontakt">Kontakt</a>
+                <a href="#">Kontakt</a>
             </nav>
 
             <div class="nav-actions">
