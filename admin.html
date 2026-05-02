@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN | ASYA GOLD — Produktmanagement</title>
+    <title>Admin Dashboard | Asya Gold</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body style="background: var(--light-gray);">
+<body style="background: var(--cream);">
 
     <header class="scrolled">
         <div class="container nav-wrapper">
-            <a href="index.html" class="logo">Asya Gold Admin</a>
+            <a href="index.html" class="logo">Admin Panel</a>
             <nav class="nav-links">
-                <a href="index.html">Zur Seite</a>
-                <a href="#" onclick="logout()">Logout</a>
+                <a href="index.html">Zur Website</a>
+                <a href="shop.html">Shop-Ansicht</a>
             </nav>
         </div>
     </header>
 
-    <main style="padding-top: 150px;">
+    <main style="padding-top: 120px;">
         <div class="container">
             <div class="admin-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 50px;">
                 
@@ -45,10 +45,14 @@
                             <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Preis (nur Ziffern)</label>
                             <input type="number" id="price" step="0.01" required placeholder="z.B. 1290" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
                         </div>
+                        
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Bild-URL</label>
-                            <input type="text" id="image" placeholder="images/..." style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
+                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Produktbild Hochladen (R2)</label>
+                            <input type="file" id="image-file" accept="image/*" style="width: 100%; padding: 10px; border: 1px dashed var(--gold); background: #fffcf5;">
+                            <p style="font-size: 10px; color: var(--gray); margin-top: 5px;">Oder Bild-URL direkt eingeben:</p>
+                            <input type="text" id="image-url" placeholder="https://..." style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans); margin-top: 5px;">
                         </div>
+
                         <button type="submit" id="submit-btn" class="cta-luxury" style="width: 100%;">Produkt speichern</button>
                         <button type="button" id="cancel-btn" style="width: 100%; margin-top: 10px; background: none; border: none; font-size: 11px; cursor: pointer; color: var(--gray); display: none;" onclick="resetForm()">Abbrechen</button>
                     </form>
@@ -67,90 +71,101 @@
     </main>
 
     <script>
-        // Admin-System synchronisiert mit dem Shop
-        const defaultProducts = [
-            { id: 1, title: "L'Aurore Ring", category: "Signature Collection", price: 2490, image: "images/gold1.png", active: true },
-            { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: 1850, image: "images/gold2.png", active: true },
-            { id: 3, title: "Océan Bracelet", category: "Timeless Wristwear", price: 3200, image: "images/gold3.png", active: true },
-            { id: 4, title: "Lumière Hoops", category: "Earrings", price: 950, image: "images/gold4.png", active: true },
-            { id: 5, title: "Royal Crown Ring", category: "Signature Collection", price: 4100, image: "images/gold5.png", active: true },
-            { id: 6, title: "Midnight Pendant", category: "Fine Necklaces", price: 2100, image: "images/gold6.png", active: true },
-            { id: 7, title: "Gilded Bangle", category: "Timeless Wristwear", price: 1550, image: "images/gold7.png", active: true },
-            { id: 8, title: "Sunburst Studs", category: "Earrings", price: 780, image: "images/gold8.png", active: true }
-        ];
-
-        let products = JSON.parse(localStorage.getItem('asya_products')) || defaultProducts;
-        // Sicherstellen, dass alle Produkte das 'active' Flag haben
-        products = products.map(p => ({ ...p, active: p.active !== undefined ? p.active : true }));
+        const API_URL = 'https://asya-gold.f-klavun.workers.dev/api';
+        let products = [];
 
         function formatCurrency(val) {
             return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
         }
 
+        async function fetchProducts() {
+            try {
+                const res = await fetch(`${API_URL}/products`);
+                products = await res.json();
+                renderAdminList();
+            } catch (err) {
+                console.error("Laden fehlgeschlagen:", err);
+            }
+        }
+
         function renderAdminList() {
             const list = document.getElementById('admin-product-list');
             if (products.length === 0) {
-                list.innerHTML = `<p style="text-align: center; color: var(--gray); padding: 40px 0;">Keine Produkte vorhanden. <br> <a href="#" onclick="resetToDefaults()" style="color: var(--gold); font-size: 11px; text-transform: uppercase;">Standard-Produkte laden</a></p>`;
+                list.innerHTML = `<p style="text-align: center; color: var(--gray); padding: 40px 0;">Keine Produkte in der Datenbank.</p>`;
                 return;
             }
 
             list.innerHTML = products.map((p, index) => `
                 <div style="display: flex; align-items: center; gap: 20px; padding: 15px 0; border-bottom: 1px solid var(--border);">
-                    <img src="${p.image}" onerror="this.src='https://via.placeholder.com/50x60?text=Error'" style="width: 50px; height: 60px; object-fit: cover; background: #eee;">
+                    <img src="${p.image_url}" onerror="this.src='https://via.placeholder.com/50x60?text=Error'" style="width: 50px; height: 60px; object-fit: cover; background: #eee;">
                     <div style="flex: 1;">
                         <h4 style="font-family: var(--font-serif); font-size: 18px;">${p.title}</h4>
                         <p style="font-size: 11px; color: var(--gray); text-transform: uppercase;">${p.category} | ${formatCurrency(p.price)}</p>
                     </div>
                     <div style="display: flex; gap: 8px;">
                         <button onclick="editProduct(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: #eee; border: none;">Bearbeiten</button>
-                        <button onclick="toggleActive(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: ${p.active ? '#e1f5fe' : '#ffebee'}; border: none; color: ${p.active ? '#0288d1' : '#c62828'};">
+                        <button onclick="toggleActive(${p.id}, ${p.active})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: ${p.active ? '#e1f5fe' : '#ffebee'}; border: none; color: ${p.active ? '#0288d1' : '#c62828'};">
                             ${p.active ? 'Aktiv' : 'Inaktiv'}
                         </button>
-                        <button onclick="deleteProduct(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: #fff; border: 1px solid #eee; color: #999;">Löschen</button>
+                        <button onclick="deleteProduct(${p.id})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: #fff; border: 1px solid #eee; color: #999;">Löschen</button>
                     </div>
                 </div>
             `).join('');
-            
-            localStorage.setItem('asya_products', JSON.stringify(products));
         }
 
-        window.resetToDefaults = () => {
-            if (confirm('Möchten Sie die 8 Standard-Produkte wiederherstellen?')) {
-                products = [...defaultProducts];
-                renderAdminList();
-                location.reload();
-            }
-        };
-
-        document.getElementById('add-product-form').addEventListener('submit', (e) => {
+        document.getElementById('add-product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const editId = document.getElementById('edit-id').value;
-            let imgPath = document.getElementById('image').value.trim() || 'images/gold1.png';
-            
-            // Pfad-Korrektur: Führender Slash weg, .png dran wenn fehlt
-            if (imgPath.startsWith('/')) imgPath = imgPath.substring(1);
-            if (imgPath && !imgPath.includes('.')) imgPath += '.png';
-            if (imgPath.startsWith('images/') === false && !imgPath.startsWith('http')) imgPath = 'images/' + imgPath;
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerText = "Speichere...";
+            submitBtn.disabled = true;
 
+            const editId = document.getElementById('edit-id').value;
+            let finalImageUrl = document.getElementById('image-url').value;
+            const imageFile = document.getElementById('image-file').files[0];
+
+            // 1. Wenn ein File ausgewählt wurde, zu R2 hochladen
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append('file', imageFile);
+                try {
+                    const uploadRes = await fetch(`${API_URL}/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const uploadData = await uploadRes.json();
+                    finalImageUrl = uploadData.url;
+                } catch (err) {
+                    alert("Upload fehlgeschlagen!");
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Produkt speichern";
+                    return;
+                }
+            }
+
+            // 2. Produktdaten an Worker senden
             const productData = {
+                id: editId || null,
                 title: document.getElementById('title').value,
                 category: document.getElementById('category').value,
                 price: parseFloat(document.getElementById('price').value),
-                image: imgPath,
+                image: finalImageUrl || 'images/gold1.png',
                 active: true
             };
 
-            if (editId) {
-                const index = products.findIndex(p => p.id == editId);
-                products[index] = { ...products[index], ...productData };
-            } else {
-                productData.id = Date.now();
-                products.push(productData);
+            try {
+                await fetch(`${API_URL}/products`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
+                resetForm();
+                fetchProducts();
+            } catch (err) {
+                alert("Speichern fehlgeschlagen!");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Produkt speichern";
             }
-
-            localStorage.setItem('asya_products', JSON.stringify(products));
-            resetForm();
-            renderAdminList();
         });
 
         window.editProduct = (index) => {
@@ -159,11 +174,30 @@
             document.getElementById('title').value = p.title;
             document.getElementById('category').value = p.category;
             document.getElementById('price').value = p.price;
-            document.getElementById('image').value = p.image;
+            document.getElementById('image-url').value = p.image_url;
             
             document.getElementById('form-title').innerText = 'Produkt bearbeiten';
             document.getElementById('submit-btn').innerText = 'Änderungen speichern';
             document.getElementById('cancel-btn').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.deleteProduct = async (id) => {
+            if (confirm('Wirklich löschen?')) {
+                await fetch(`${API_URL}/products/${id}`, { method: 'DELETE' });
+                fetchProducts();
+            }
+        };
+
+        window.toggleActive = async (id, currentStatus) => {
+            const p = products.find(p => p.id === id);
+            const updated = { ...p, id: id, active: !currentStatus, image: p.image_url };
+            await fetch(`${API_URL}/products`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updated)
+            });
+            fetchProducts();
         };
 
         window.resetForm = () => {
@@ -174,20 +208,7 @@
             document.getElementById('cancel-btn').style.display = 'none';
         };
 
-        window.toggleActive = (index) => {
-            products[index].active = !products[index].active;
-            renderAdminList();
-        };
-
-        window.deleteProduct = (index) => {
-            if(confirm('Produkt wirklich löschen?')) {
-                products.splice(index, 1);
-                renderAdminList();
-            }
-        };
-
-        renderAdminList();
+        fetchProducts();
     </script>
-
 </body>
 </html>

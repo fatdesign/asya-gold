@@ -1,0 +1,12 @@
+name = "asya-gold"
+main = "worker.js"
+compatibility_date = "2024-05-02"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "asyagold-db"
+database_id = "DEINE_D1_DATABASE_ID_HIER_EINTRAGEN"
+
+[[r2_buckets]]
+binding = "ASSETS"
+bucket_name = "asya-gold-assets"
