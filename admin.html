@@ -21,7 +21,7 @@
 
     <main style="padding-top: 120px;">
         <div class="container">
-            <div class="admin-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 50px;">
+            <div class="admin-grid" style="display: grid; grid-template-columns: 400px 1fr; gap: 50px;">
                 
                 <!-- Form: Produkt hinzufügen / bearbeiten -->
                 <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
@@ -44,6 +44,11 @@
                         <div class="form-group" style="margin-bottom: 20px;">
                             <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Preis (nur Ziffern)</label>
                             <input type="number" id="price" step="0.01" required placeholder="z.B. 1290" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Lagerbestand</label>
+                            <input type="number" id="stock" required value="10" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);">
                         </div>
                         
                         <div class="form-group" style="margin-bottom: 20px;">
@@ -113,6 +118,10 @@
                         <h4 style="font-family: var(--font-serif); font-size: 18px;">${p.title}</h4>
                         <p style="font-size: 11px; color: var(--gray); text-transform: uppercase;">${p.category} | ${formatCurrency(p.price)}</p>
                     </div>
+                    <div style="text-align: right; margin-right: 20px;">
+                        <span style="display: block; font-size: 10px; color: var(--gray); text-transform: uppercase;">Bestand</span>
+                        <span style="font-weight: 700; color: ${p.stock <= 3 ? '#c62828' : 'var(--black)'}">${p.stock}</span>
+                    </div>
                     <div style="display: flex; gap: 8px;">
                         <button onclick="editProduct(${index})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: #eee; border: none;">Bearbeiten</button>
                         <button onclick="toggleActive(${p.id}, ${p.active})" style="padding: 5px 10px; font-size: 10px; cursor: pointer; background: ${p.active ? '#e1f5fe' : '#ffebee'}; border: none; color: ${p.active ? '#0288d1' : '#c62828'};">
@@ -168,6 +177,7 @@
                 title: document.getElementById('title').value,
                 category: document.getElementById('category').value,
                 price: parseFloat(document.getElementById('price').value),
+                stock: parseInt(document.getElementById('stock').value),
                 image: finalImageUrl || 'images/gold1.png',
                 active: true
             };
@@ -207,6 +217,7 @@
             document.getElementById('title').value = p.title;
             document.getElementById('category').value = p.category;
             document.getElementById('price').value = p.price;
+            document.getElementById('stock').value = p.stock || 0;
             document.getElementById('image-url').value = p.image_url;
             
             document.getElementById('form-title').innerText = 'Produkt bearbeiten';

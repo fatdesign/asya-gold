@@ -140,21 +140,30 @@ async function renderProducts() {
             return;
         }
         
-        container.innerHTML = activeProducts.map(p => `
-            <div class="product-item">
-                <div class="product-image-container">
-                    <img src="${p.image_url}" alt="${p.title}" onerror="this.src='https://via.placeholder.com/400x500?text=Bild+nicht+gefunden'">
-                    <div class="add-overlay" onclick="addToCart(${p.id})">In den Warenkorb</div>
-                </div>
-                <div class="product-details">
-                    <div class="product-info">
-                        <p>${p.category}</p>
-                        <h3>${p.title}</h3>
+        container.innerHTML = activeProducts.map(p => {
+            const isOutOfStock = p.stock <= 0;
+            const isLowStock = p.stock > 0 && p.stock <= 3;
+            
+            return `
+                <div class="product-item ${isOutOfStock ? 'out-of-stock' : ''}">
+                    <div class="product-image-container">
+                        <img src="${p.image_url}" alt="${p.title}" onerror="this.src='https://via.placeholder.com/400x500?text=Bild+nicht+gefunden'">
+                        ${isOutOfStock ? 
+                            '<div class="stock-badge out">Ausverkauft</div>' : 
+                            `<div class="add-overlay" onclick="addToCart(${p.id})">In den Warenkorb</div>`
+                        }
+                        ${isLowStock ? `<div class="stock-badge low">Nur noch ${p.stock} verfügbar</div>` : ''}
                     </div>
-                    <div class="product-price">${formatCurrency(p.price)}</div>
+                    <div class="product-details">
+                        <div class="product-info">
+                            <p>${p.category}</p>
+                            <h3>${p.title}</h3>
+                        </div>
+                        <div class="product-price">${formatCurrency(p.price)}</div>
+                    </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
         // Reveal Animation Setup
         const observer = new IntersectionObserver((entries) => {

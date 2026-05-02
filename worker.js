@@ -27,23 +27,23 @@ export default {
       // --- API: Produkt hinzufügen / bearbeiten ---
       if (path === "/api/products" && method === "POST") {
         const data = await request.json();
-        const { id, title, category, price, image, active } = data;
+        const { id, title, category, price, image, active, stock } = data;
 
         if (id) {
            console.log("Prüfe Update für ID:", id);
            const existing = await env.DB.prepare("SELECT id FROM products WHERE id = ?").bind(id).first();
            if (existing) {
               await env.DB.prepare(
-                "UPDATE products SET title = ?, category = ?, price = ?, image_url = ?, active = ? WHERE id = ?"
-              ).bind(title, category, price, image, active ? 1 : 0, id).run();
+                "UPDATE products SET title = ?, category = ?, price = ?, image_url = ?, active = ?, stock = ? WHERE id = ?"
+              ).bind(title, category, price, image, active ? 1 : 0, stock || 0, id).run();
               return new Response(JSON.stringify({ success: true, message: "Produkt aktualisiert", id: id }), { headers: corsHeaders });
            }
         }
 
         // Neu anlegen
         await env.DB.prepare(
-          "INSERT INTO products (title, category, price, image_url, active) VALUES (?, ?, ?, ?, ?)"
-        ).bind(title, category, price, image, active ? 1 : 0).run();
+          "INSERT INTO products (title, category, price, image_url, active, stock) VALUES (?, ?, ?, ?, ?, ?)"
+        ).bind(title, category, price, image, active ? 1 : 0, stock || 0).run();
         
         return new Response(JSON.stringify({ success: true, message: "Created" }), { headers: corsHeaders });
       }
