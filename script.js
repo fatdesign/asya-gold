@@ -1,7 +1,7 @@
 // --- Configuration ---
 const API_URL = 'https://asya-gold.f-klavun.workers.dev/api';
 
-// --- Scroll Effects ---
+// --- Header Scroll Effect ---
 const header = document.getElementById('header');
 window.addEventListener('scroll', () => {
     if (header && window.scrollY > 50) {
@@ -10,6 +10,39 @@ window.addEventListener('scroll', () => {
         header.classList.remove('scrolled');
     }
 });
+
+// --- Luxury Scroll Reveal (IntersectionObserver) ---
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target); // Einmal triggern reicht
+        }
+    });
+}, {
+    threshold: 0.15, // Startet wenn 15% des Elements sichtbar ist
+    rootMargin: '0px 0px -50px 0px' // Etwas früher auslösen
+});
+
+// Alle reveal-Elemente registrieren
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+    revealObserver.observe(el);
+});
+
+// --- Parallax Effekt auf Lifestyle Bild ---
+const lifestyleImg = document.querySelector('.lifestyle-split-image img');
+if (lifestyleImg) {
+    window.addEventListener('scroll', () => {
+        const rect = lifestyleImg.closest('.lifestyle-split-image').getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inView) {
+            const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+            const shift = (progress - 0.5) * 40; // Max 20px Verschiebung
+            lifestyleImg.style.transform = `translateY(${shift}px) scale(1.05)`;
+        }
+    }, { passive: true });
+}
+
 
 // --- Cart Management ---
 const cartBtn = document.querySelector('.cart-btn');
@@ -185,47 +218,24 @@ async function renderProducts() {
             `;
         }).join('');
 
-        // Initialisiere Animationen für dynamisch geladene Produkte
-        initScrollAnimations();
-
-        // --- Subtiler Parallax Effekt für Lifestyle-Bild ---
-        window.addEventListener('scroll', () => {
-            const parallaxImg = document.querySelector('.lifestyle-split-image img');
-            if (parallaxImg) {
-                const scrolled = window.pageYOffset;
-                const rect = parallaxImg.parentElement.getBoundingClientRect();
-                const offset = window.innerHeight - rect.top;
-                
-                if (offset > 0 && rect.top < window.innerHeight) {
-                    const speed = 0.05;
-                    const yPos = -(offset * speed);
-                    parallaxImg.style.transform = `translateY(${yPos}px) scale(1.15)`;
+        // Reveal Animation Setup
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 }
-            }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.product-item').forEach(item => {
+            observer.observe(item);
         });
 
     } catch (err) {
         console.error("Fehler beim Laden der Produkte:", err);
+        container.innerHTML = `<p style="text-align: center; grid-column: 1/-1; color: var(--gray); padding: 100px 0;">Verbindung zum Server fehlgeschlagen.</p>`;
     }
 }
-
-// --- Zentrale Animations-Logik ---
-function initScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.product-item, .reveal').forEach(el => {
-        observer.observe(el);
-    });
-}
-
-// Start der Animationen beim Laden
-document.addEventListener('DOMContentLoaded', initScrollAnimations);
 
 // --- Settings (Marquee) ---
 async function fetchSettings() {
