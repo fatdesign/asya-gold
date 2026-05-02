@@ -104,14 +104,20 @@ header.scrolled {
 }
 
 .logo img {
-    height: 60px; /* Standard Höhe für Desktop */
+    height: 100px; /* Deutlich größer auf Desktop */
     width: auto;
     display: block;
-    transition: height 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 header.scrolled .logo img {
-    height: 45px; /* Kleiner wenn gescrollt */
+    height: 70px; /* Immer noch gut sichtbar beim Scrollen */
+}
+
+@media (max-width: 768px) {
+    .logo img {
+        height: 70px; /* Optimiert für Handy */
+    }
 }
 
 .nav-links {
