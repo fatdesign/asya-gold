@@ -135,14 +135,23 @@ header.scrolled .logo img {
     .nav-wrapper {
         display: flex;
         justify-content: space-between;
+        padding: 0 20px;
     }
     
-    .nav-group-left, .nav-group-right {
+    .nav-links.nav-group-left, .nav-links.nav-group-right {
         display: none;
     }
 
+    .nav-actions {
+        margin-left: 0;
+    }
+
+    .logo {
+        padding: 0;
+    }
+
     .logo img {
-        height: 80px;
+        height: 60px;
     }
 }
 
