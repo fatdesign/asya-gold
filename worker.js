@@ -91,6 +91,17 @@ export default {
         return new Response(object.body, { headers });
       }
 
+      // --- API: Checkout (Lagerbestand abziehen) ---
+      if (path === "/api/checkout" && method === "POST") {
+        const { items } = await request.json();
+        for (const item of items) {
+          await env.DB.prepare(
+            "UPDATE products SET stock = MAX(0, stock - 1) WHERE id = ?"
+          ).bind(item.id).run();
+        }
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
       // --- API: Einstellungen abrufen ---
       if (path === "/api/settings" && method === "GET") {
         const { results } = await env.DB.prepare("SELECT * FROM settings").all();

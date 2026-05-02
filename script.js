@@ -97,7 +97,7 @@ window.removeFromCart = (index) => {
 };
 
 // --- Checkout ---
-window.startCheckout = () => {
+window.startCheckout = async () => {
     if (cart.length === 0) {
         alert('Ihr Warenkorb ist leer.');
         return;
@@ -110,16 +110,36 @@ window.startCheckout = () => {
         btn.disabled = true;
     }
 
-    setTimeout(() => {
-        alert('Vielen Dank für Ihre Bestellung! Wir leiten Sie nun zur sicheren Zahlung weiter (Stripe-Simulation).');
-        cart = [];
-        updateCartUI();
-        toggleCart();
+    try {
+        // --- Lagerbestand in der Datenbank abziehen ---
+        const response = await fetch(`${API_URL}/checkout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: cart })
+        });
+
+        if (!response.ok) throw new Error("Checkout fehlgeschlagen");
+
+        setTimeout(() => {
+            alert('Vielen Dank für Ihre Bestellung! Der Lagerbestand wurde aktualisiert.');
+            cart = [];
+            updateCartUI();
+            toggleCart();
+            renderProducts(); // Produkte neu laden um neuen Bestand zu zeigen
+            
+            if (btn) {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }, 1000);
+
+    } catch (err) {
+        alert("Fehler beim Checkout: " + err.message);
         if (btn) {
             btn.innerText = originalText;
             btn.disabled = false;
         }
-    }, 1500);
+    }
 };
 
 // --- Product Data & Rendering ---
