@@ -186,12 +186,28 @@ async function renderProducts() {
 
 // --- Settings (Marquee) ---
 async function fetchSettings() {
+    const marqueeBar = document.querySelector('.marquee-bar');
     const marqueeContainer = document.getElementById('marquee-text');
+    const header = document.getElementById('header');
     if (!marqueeContainer) return;
 
     try {
         const response = await fetch(`${API_URL}/settings`);
         const settings = await response.json();
+        
+        // AN/AUS Logik
+        if (settings.marquee_active === 'false') {
+            if (marqueeBar) marqueeBar.style.display = 'none';
+            if (header) header.style.top = '0';
+            
+            // Padding Anpassung für Shop-Seite
+            const main = document.querySelector('main');
+            if (main && window.location.pathname.includes('shop.html')) {
+                main.style.paddingTop = '100px';
+            }
+            return;
+        }
+
         const text = settings.marquee_text || 'ASYA GOLD — FINE JEWELRY & ART';
         
         // Wir wiederholen den Text mehrfach für einen nahtlosen Übergang
