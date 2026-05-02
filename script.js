@@ -1,9 +1,9 @@
 // --- Scroll Effects ---
 const header = document.getElementById('header');
 window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
+    if (header && window.scrollY > 50) {
         header.classList.add('scrolled');
-    } else {
+    } else if (header) {
         header.classList.remove('scrolled');
     }
 });
@@ -20,118 +20,23 @@ const cartCount = document.getElementById('cart-count');
 let cart = JSON.parse(localStorage.getItem('asya_cart')) || [];
 
 function toggleCart() {
-    cartDrawer.classList.toggle('active');
-    cartOverlay.classList.toggle('active');
+    if (cartDrawer && cartOverlay) {
+        cartDrawer.classList.toggle('active');
+        cartOverlay.classList.toggle('active');
+    }
 }
 
-cartBtn.addEventListener('click', toggleCart);
-closeCartBtn.addEventListener('click', toggleCart);
-cartOverlay.addEventListener('click', toggleCart);
-
-function updateCartUI() {
-    localStorage.setItem('asya_cart', JSON.stringify(cart));
-    cartCount.innerText = cart.length;
-
-    if (cart.length === 0) {
-        cartItemsContainer.innerHTML = `<p style="text-align: center; color: var(--gray); margin-top: 50px;">Ihr Warenkorb ist noch leer.</p>`;
-        cartTotalPrice.innerText = '0,00 €';
-        return;
-    }
-
-    cartItemsContainer.innerHTML = cart.map((item, index) => `
-        <div class="cart-item">
-            <img src="${item.image}" class="cart-item-img">
-            <div class="cart-item-info">
-                <h4>${item.title}</h4>
-                <p>${item.price}</p>
-            </div>
-            <button class="remove-item" onclick="removeFromCart(${index})"><i class="fa-solid fa-trash-can"></i></button>
-        </div>
-    `).join('');
-
-    const total = cart.reduce((sum, item) => {
-        const price = parseFloat(item.price.replace(' €', '').replace('.', '').replace(',', '.'));
-        return sum + price;
-    }, 0);
-
-    cartTotalPrice.innerText = total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-}
-
-window.addToCart = (productId) => {
-    const product = products.find(p => p.id === productId);
-    if (product) {
-        cart.push(product);
-        updateCartUI();
-        if (!cartDrawer.classList.contains('active')) toggleCart();
-    }
-};
-
-window.removeFromCart = (index) => {
-    cart.splice(index, 1);
-    updateCartUI();
-};
-
-// --- Checkout ---
-window.startCheckout = () => {
-    if (cart.length === 0) {
-        alert('Ihr Warenkorb ist leer.');
-        return;
-    }
-    
-    // Simulations-Effekt
-    const btn = document.querySelector('.cart-footer .cta-luxury');
-    const originalText = btn.innerText;
-    btn.innerText = 'Verarbeite...';
-    btn.disabled = true;
-
-    setTimeout(() => {
-        alert('Vielen Dank für Ihre Bestellung! Wir leiten Sie nun zur sicheren Zahlung weiter (Stripe-Simulation).');
-        cart = [];
-        updateCartUI();
-        toggleCart();
-        btn.innerText = originalText;
-        btn.disabled = false;
-    }, 1500);
-};
-
-// --- Product Data & Rendering ---
-const defaultProducts = [
-    { id: 1, title: "L'Aurore Ring", category: "Signature Collection", price: 2490, image: "images/gold_diamond_ring_luxury_1777729778737.png", active: true },
-    { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: 1850, image: "images/gold_necklace_elegant_1777729798075.png", active: true },
-    { id: 3, title: "Océan Bracelet", category: "Timeless Wristwear", price: 3200, image: "images/gold_bracelet_set_1777729811867.png", active: true },
-    { id: 4, title: "Lumière Hoops", category: "Earrings", price: 950, image: "images/gold_earrings_minimalist_1777729825390.png", active: true }
-];
-
-let products = JSON.parse(localStorage.getItem('asya_products')) || defaultProducts;
-
-const container = document.getElementById('product-container');
+if (cartBtn) cartBtn.addEventListener('click', toggleCart);
+if (closeCartBtn) closeCartBtn.addEventListener('click', toggleCart);
+if (cartOverlay) cartOverlay.addEventListener('click', toggleCart);
 
 function formatCurrency(val) {
     return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
 }
 
-function renderProducts() {
-    if (!container) return;
-    const activeProducts = products.filter(p => p.active);
-    
-    container.innerHTML = activeProducts.map(p => `
-        <div class="product-item">
-            <div class="product-image-container">
-                <img src="${p.image}" alt="${p.title}">
-                <div class="add-overlay" onclick="addToCart(${p.id})">In den Warenkorb</div>
-            </div>
-            <div class="product-details">
-                <div class="product-info">
-                    <p>${p.category}</p>
-                    <h3>${p.title}</h3>
-                </div>
-                <div class="product-price">${formatCurrency(p.price)}</div>
-            </div>
-        </div>
-    `).join('');
-}
-
 function updateCartUI() {
+    if (!cartCount || !cartItemsContainer || !cartTotalPrice) return;
+    
     localStorage.setItem('asya_cart', JSON.stringify(cart));
     cartCount.innerText = cart.length;
 
@@ -155,7 +60,88 @@ function updateCartUI() {
     const total = cart.reduce((sum, item) => sum + item.price, 0);
     cartTotalPrice.innerText = formatCurrency(total);
 }
-    // Intersection Observer for reveal animation
+
+window.addToCart = (productId) => {
+    const product = products.find(p => p.id === productId);
+    if (product) {
+        cart.push(product);
+        updateCartUI();
+        if (cartDrawer && !cartDrawer.classList.contains('active')) toggleCart();
+    }
+};
+
+window.removeFromCart = (index) => {
+    cart.splice(index, 1);
+    updateCartUI();
+};
+
+// --- Checkout ---
+window.startCheckout = () => {
+    if (cart.length === 0) {
+        alert('Ihr Warenkorb ist leer.');
+        return;
+    }
+    
+    const btn = document.querySelector('.cart-footer .cta-luxury');
+    const originalText = btn ? btn.innerText : 'Zur Kasse';
+    if (btn) {
+        btn.innerText = 'Verarbeite...';
+        btn.disabled = true;
+    }
+
+    setTimeout(() => {
+        alert('Vielen Dank für Ihre Bestellung! Wir leiten Sie nun zur sicheren Zahlung weiter (Stripe-Simulation).');
+        cart = [];
+        updateCartUI();
+        toggleCart();
+        if (btn) {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    }, 1500);
+};
+
+// --- Product Data & Rendering ---
+const defaultProducts = [
+    { id: 1, title: "L'Aurore Ring", category: "Signature Collection", price: 2490, image: "images/gold1.png", active: true },
+    { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: 1850, image: "images/gold2.png", active: true },
+    { id: 3, title: "Océan Bracelet", category: "Timeless Wristwear", price: 3200, image: "images/gold3.png", active: true },
+    { id: 4, title: "Lumière Hoops", category: "Earrings", price: 950, image: "images/gold4.png", active: true },
+    { id: 5, title: "Royal Crown Ring", category: "Signature Collection", price: 4100, image: "images/gold5.png", active: true },
+    { id: 6, title: "Midnight Pendant", category: "Fine Necklaces", price: 2100, image: "images/gold6.png", active: true },
+    { id: 7, title: "Gilded Bangle", category: "Timeless Wristwear", price: 1550, image: "images/gold7.png", active: true },
+    { id: 8, title: "Sunburst Studs", category: "Earrings", price: 780, image: "images/gold8.png", active: true }
+];
+
+let products = JSON.parse(localStorage.getItem('asya_products')) || defaultProducts;
+
+// Sicherstellen, dass die Daten im LocalStorage das 'active' Flag haben
+products = products.map(p => ({ ...p, active: p.active !== undefined ? p.active : true }));
+
+const container = document.getElementById('product-container');
+
+function renderProducts() {
+    if (!container) return;
+    
+    const activeProducts = products.filter(p => p.active);
+    
+    container.innerHTML = activeProducts.map(p => `
+        <div class="product-item">
+            <div class="product-image-container">
+                <img src="${p.image}" alt="${p.title}">
+                <div class="add-overlay" onclick="addToCart(${p.id})">In den Warenkorb</div>
+            </div>
+            <div class="product-details">
+                <div class="product-info">
+                    <p>${p.category}</p>
+                    <h3>${p.title}</h3>
+                </div>
+                <div class="product-price">${formatCurrency(p.price)}</div>
+            </div>
+        </div>
+    `).join('');
+
+    // Reveal Animation Setup
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {

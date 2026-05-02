@@ -69,13 +69,19 @@
     <script>
         // Admin-System synchronisiert mit dem Shop
         const defaultProducts = [
-            { id: 1, title: "L'Aurore Ring", category: "Signature Collection", price: 2490, image: "images/gold_diamond_ring_luxury_1777729778737.png", active: true },
-            { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: 1850, image: "images/gold_necklace_elegant_1777729798075.png", active: true },
-            { id: 3, title: "Océan Bracelet", category: "Timeless Wristwear", price: 3200, image: "images/gold_bracelet_set_1777729811867.png", active: true },
-            { id: 4, title: "Lumière Hoops", category: "Earrings", price: 950, image: "images/gold_earrings_minimalist_1777729825390.png", active: true }
+            { id: 1, title: "L'Aurore Ring", category: "Signature Collection", price: 2490, image: "images/gold1.png", active: true },
+            { id: 2, title: "Étoile Collier", category: "Fine Necklaces", price: 1850, image: "images/gold2.png", active: true },
+            { id: 3, title: "Océan Bracelet", category: "Timeless Wristwear", price: 3200, image: "images/gold3.png", active: true },
+            { id: 4, title: "Lumière Hoops", category: "Earrings", price: 950, image: "images/gold4.png", active: true },
+            { id: 5, title: "Royal Crown Ring", category: "Signature Collection", price: 4100, image: "images/gold5.png", active: true },
+            { id: 6, title: "Midnight Pendant", category: "Fine Necklaces", price: 2100, image: "images/gold6.png", active: true },
+            { id: 7, title: "Gilded Bangle", category: "Timeless Wristwear", price: 1550, image: "images/gold7.png", active: true },
+            { id: 8, title: "Sunburst Studs", category: "Earrings", price: 780, image: "images/gold8.png", active: true }
         ];
 
         let products = JSON.parse(localStorage.getItem('asya_products')) || defaultProducts;
+        // Sicherstellen, dass alle Produkte das 'active' Flag haben
+        products = products.map(p => ({ ...p, active: p.active !== undefined ? p.active : true }));
 
         function formatCurrency(val) {
             return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
