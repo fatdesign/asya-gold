@@ -86,29 +86,36 @@ header.scrolled {
 
 .nav-wrapper {
     width: 100%;
-    max-width: 1600px;
+    max-width: 1600px; /* Großzügige Breite für High-End Look */
     margin: 0 auto;
     padding: 0 60px;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    position: relative;
+    position: relative; /* Wichtig für absolute Positionierung des Carts */
 }
 
-.nav-group-left, .nav-group-right {
+.nav-group-left {
     display: flex;
     gap: 50px;
+    justify-content: flex-start;
 }
 
 .nav-group-right {
+    display: flex;
+    gap: 50px;
     justify-content: flex-end;
 }
 
 .nav-actions {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
     gap: 30px;
-    margin-left: 50px;
+    z-index: 20;
 }
 
 .logo {
