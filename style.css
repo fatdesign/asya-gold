@@ -596,6 +596,24 @@ section {
     gap: 60px;
 }
 
+/* Shop Page - 4 Column Layout */
+.shop-page .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.shop-page .product-info h3 {
+    font-size: 18px;
+}
+
+.shop-page .product-price {
+    font-size: 16px;
+}
+
+.shop-page .product-image-container {
+    margin-bottom: 15px;
+}
+
 .product-item {
     position: relative;
     opacity: 0;
@@ -972,6 +990,11 @@ footer {
     .hero h1 {
         font-size: 60px;
     }
+
+    .shop-page .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -992,8 +1015,13 @@ footer {
     }
 
     .product-grid {
-        grid-template-columns: 1fr; /* Keine zwei-zeiligen Elemente nebeneinander */
+        grid-template-columns: 1fr;
         gap: 40px;
+    }
+
+    .shop-page .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
     }
 
     .footer-nav {
