@@ -339,6 +339,19 @@
 
         fetchProducts();
         fetchSettings();
+
+        // Reveal body after load (Transition Fix)
+        function revealBody() {
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 100);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', revealBody);
+        } else {
+            revealBody();
+        }
     </script>
 </body>
 </html>
