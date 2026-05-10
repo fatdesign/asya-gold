@@ -1043,6 +1043,20 @@ footer {
         gap: 20px;
     }
 
+    .lifestyle-split {
+        grid-template-columns: 1fr !important;
+        gap: 40px !important;
+        padding: 60px 0 !important;
+    }
+
+    /* Reset order on mobile for Section 2 */
+    .featured-reverse .lifestyle-split-image {
+        order: 0 !important;
+    }
+    .featured-reverse .lifestyle-split-content {
+        order: 0 !important;
+    }
+
     .footer-nav {
         flex-direction: column;
         gap: 20px;
@@ -1078,5 +1092,27 @@ footer {
 
     .atelier-grid {
         grid-template-columns: 1fr;
+    }
+}
+/* --- Featured Sections Desktop Logic --- */
+@media (min-width: 769px) {
+    .lifestyle-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 100px;
+        align-items: center;
+        padding: 120px 0;
+    }
+
+    .featured-reverse .lifestyle-split-image {
+        order: 2;
+    }
+    .featured-reverse .lifestyle-split-content {
+        order: 1;
+        text-align: right;
+    }
+    
+    .featured-reverse .lifestyle-split-content .cta-luxury {
+        margin-left: auto;
     }
 }
