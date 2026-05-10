@@ -123,33 +123,6 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      // --- API: KI Text generieren (Gemini) ---
-      if (path === "/api/generate-ai-text" && method === "POST") {
-        const { title, category } = await request.json();
-        const apiKey = env.KI_API;
-        
-        if (!apiKey) {
-          return new Response("API Key missing", { status: 500, headers: corsHeaders });
-        }
-
-        const prompt = `Schreibe einen kurzen, luxuriösen Werbetext (maximal 2 Sätze) für folgendes Schmuckstück: "${title}" in der Kategorie "${category}". Der Ton soll elegant, exklusiv und inspirierend sein für eine High-End Schmuckmarke namens ASYA GOLD.`;
-
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }]
-          })
-        });
-
-        const result = await response.json();
-        const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text || "Fehler bei der Generierung.";
-
-        return new Response(JSON.stringify({ text: generatedText.trim() }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
       return new Response("Not Found", { status: 404 });
 
     } catch (err) {
