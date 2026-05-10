@@ -212,60 +212,80 @@ async function renderProducts() {
     try {
         const response = await fetch(`${API_URL}/products`);
         const products = await response.json();
-        window.allProducts = products; // Global für Add-to-Cart speichern
+        window.allProducts = products; // Global speichern
         
         const activeProducts = products.filter(p => p.active === 1 || p.active === true);
-        
-        if (activeProducts.length === 0) {
-            container.innerHTML = `<p style="text-align: center; grid-column: 1/-1; color: var(--gray); padding: 100px 0;">Momentan sind keine Produkte in dieser Kategorie verfügbar.</p>`;
-            return;
-        }
-        
-        container.innerHTML = activeProducts.map(p => {
-            const isOutOfStock = p.stock <= 0;
-            const isLowStock = p.stock > 0 && p.stock <= 3;
-            
-            return `
-                <div class="product-item ${isOutOfStock ? 'out-of-stock' : ''}">
-                    <div class="product-image-container">
-                        <img src="${p.image_url}" alt="${p.title}" onerror="this.src='https://via.placeholder.com/400x500?text=Bild+nicht+gefunden'">
-                        ${isOutOfStock ? 
-                            '<div class="stock-badge out">Ausverkauft</div>' : 
-                            `<div class="add-overlay" onclick="addToCart(${p.id})">In den Warenkorb</div>`
-                        }
-                        ${isLowStock ? `<div class="stock-badge low">Nur noch ${p.stock} verfügbar</div>` : ''}
-                    </div>
-                    <div class="product-details">
-                        <div class="product-info">
-                            <p>${p.category}</p>
-                            <h3>${p.title}</h3>
-                        </div>
-                        <div class="product-price">${formatCurrency(p.price)}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
+        renderProductList(activeProducts);
 
-        // Reveal Animation Setup
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.product-item').forEach(item => {
-            observer.observe(item);
-        });
-
-        // --- Featured Slots auf Home Page rendern ---
         renderFeaturedSlots();
 
+        // --- Shop Filter Logik ---
+        const filterLinks = document.querySelectorAll('.filter-link');
+        if (filterLinks.length > 0) {
+            filterLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    filterLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    filterProducts(link.innerText);
+                });
+            });
+        }
     } catch (err) {
-        console.error("Fehler beim Laden der Produkte:", err);
+        console.error("Fehler:", err);
         container.innerHTML = `<p style="text-align: center; grid-column: 1/-1; color: var(--gray); padding: 100px 0;">Verbindung zum Server fehlgeschlagen.</p>`;
     }
+}
+
+function renderProductList(productsToRender) {
+    if (!container) return;
+    if (productsToRender.length === 0) {
+        container.innerHTML = `<p style="text-align: center; grid-column: 1/-1; color: var(--gray); padding: 100px 0;">Momentan keine Produkte verfügbar.</p>`;
+        return;
+    }
+
+    container.innerHTML = productsToRender.map(p => {
+        const isOutOfStock = p.stock <= 0;
+        const isLowStock = p.stock > 0 && p.stock <= 3;
+        return `
+            <div class="product-item ${isOutOfStock ? 'out-of-stock' : ''}">
+                <div class="product-image-container">
+                    <img src="${p.image_url}" alt="${p.title}" onerror="this.src='https://via.placeholder.com/400x500?text=Error'">
+                    ${isOutOfStock ? 
+                        '<div class="stock-badge out">Ausverkauft</div>' : 
+                        `<div class="add-overlay" onclick="addToCart(${p.id})">In den Warenkorb</div>`
+                    }
+                    ${isLowStock ? `<div class="stock-badge low">Nur noch ${p.stock} verfügbar</div>` : ''}
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p>${p.category}</p>
+                        <h3>${p.title}</h3>
+                    </div>
+                    <div class="product-price">${formatCurrency(p.price)}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Animationen neu triggern
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    container.querySelectorAll('.product-item').forEach(item => observer.observe(item));
+}
+
+function filterProducts(category) {
+    const activeProducts = window.allProducts.filter(p => p.active === 1 || p.active === true);
+    const filtered = (category === 'Alle') 
+        ? activeProducts 
+        : activeProducts.filter(p => p.category === category);
+    renderProductList(filtered);
 }
 
 // --- Settings (Marquee) ---
