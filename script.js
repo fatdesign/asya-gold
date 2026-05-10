@@ -295,6 +295,18 @@ async function fetchSettings() {
         // Wir wiederholen den Text mehrfach für einen nahtlosen Übergang
         const items = Array(8).fill(`<span class="marquee-item">${text}</span>`).join('');
         marqueeContainer.innerHTML = items;
+
+        // --- Home Page Dynamisierung ---
+        const hTitle = document.getElementById('hero-title');
+        const hSubtitle = document.getElementById('hero-subtitle');
+
+        if (hTitle && settings.hero_title) {
+            // Wir erlauben <br> und <span> für die Gold-Optik
+            hTitle.innerHTML = settings.hero_title;
+        }
+        if (hSubtitle && settings.hero_subtitle) {
+            hSubtitle.innerText = settings.hero_subtitle;
+        }
     } catch (err) {
         console.error("Fehler beim Laden der Einstellungen:", err);
     }

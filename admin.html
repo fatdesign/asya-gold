@@ -68,19 +68,31 @@
                     </form>
                 </div>
 
-                <!-- Marquee Settings -->
+                <!-- Home Page & Global Settings -->
                 <div class="admin-card" style="background: var(--white); padding: 40px; border: 1px solid var(--border);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                        <h3 class="luxury-text" style="font-size: 20px; margin: 0;">Ankündigungsleiste</h3>
-                        <label style="display: flex; align-items: center; gap: 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;">
-                            <input type="checkbox" id="marquee-active"> Aktiv
-                        </label>
+                    <h3 class="luxury-text" style="font-size: 20px; margin-bottom: 25px;">Website Gestaltung</h3>
+                    
+                    <div style="margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Ankündigungsleiste (Marquee)</label>
+                            <label style="display: flex; align-items: center; gap: 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;">
+                                <input type="checkbox" id="marquee-active"> Aktiv
+                            </label>
+                        </div>
+                        <textarea id="marquee-input" rows="2" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 12px;" placeholder="Text für die Laufleiste..."></textarea>
                     </div>
-                    <div class="form-group" style="margin-bottom: 20px;">
-                        <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Text der Laufleiste</label>
-                        <textarea id="marquee-input" rows="4" style="width: 100%; padding: 12px; border: 1px solid var(--border); font-family: var(--font-sans);"></textarea>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700;">Home Page Hero (Haupt-Überschrift)</label>
+                        <textarea id="hero-title-input" rows="2" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 14px;" placeholder="z.B. Meisterstücke aus Gold."></textarea>
                     </div>
-                    <button onclick="updateSettings()" id="save-settings-btn" class="cta-luxury" style="width: 100%; padding: 15px;">Marquee aktualisieren</button>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700;">Home Page Untertitel</label>
+                        <input type="text" id="hero-subtitle-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 12px;" placeholder="z.B. Est. 1999 — Fine Jewelry">
+                    </div>
+
+                    <button onclick="updateSettings()" id="save-settings-btn" class="cta-luxury" style="width: 100%; padding: 15px;">Änderungen speichern</button>
                 </div>
             </div>
 
@@ -301,6 +313,12 @@
                 if (settings.marquee_active) {
                     document.getElementById('marquee-active').checked = settings.marquee_active === 'true';
                 }
+                if (settings.hero_title) {
+                    document.getElementById('hero-title-input').value = settings.hero_title;
+                }
+                if (settings.hero_subtitle) {
+                    document.getElementById('hero-subtitle-input').value = settings.hero_subtitle;
+                }
             } catch (err) {
                 console.error("Einstellungen konnten nicht geladen werden:", err);
             }
@@ -314,6 +332,8 @@
 
             const marqueeText = document.getElementById('marquee-input').value;
             const marqueeActive = document.getElementById('marquee-active').checked ? 'true' : 'false';
+            const heroTitle = document.getElementById('hero-title-input').value;
+            const heroSubtitle = document.getElementById('hero-subtitle-input').value;
             
             try {
                 const response = await fetch(`${API_URL}/settings`, {
@@ -321,7 +341,9 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         marquee_text: marqueeText,
-                        marquee_active: marqueeActive
+                        marquee_active: marqueeActive,
+                        hero_title: heroTitle,
+                        hero_subtitle: heroSubtitle
                     })
                 });
                 
