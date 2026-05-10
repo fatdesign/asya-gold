@@ -133,10 +133,7 @@ export default {
           return new Response(JSON.stringify({ error: "KI API-Key nicht konfiguriert" }), { status: 500, headers: corsHeaders });
         }
 
-        const prompt = `Du bist ein erfahrener Texter für eine edle Schmuck-Boutique namens "ASYA GOLD". 
-Schreibe einen kurzen, luxuriösen Werbetext (maximal 2-3 Sätze) für das folgende Produkt. 
-Der Text soll elegant, feminin und einladend klingen – wie aus einem Hochglanz-Katalog. 
-WICHTIG: Beende deine Sätze immer vollständig. Gib nur den reinen Text aus, ohne Anführungszeichen, ohne Einleitung.
+        const prompt = `Schreibe GENAU EINEN einzigen vollständigen Satz als luxuriösen Werbetext für ein Schmuckstück der Boutique "ASYA GOLD". Der Satz soll elegant und feminin klingen, maximal 15 Wörter lang sein und mit einem Punkt enden. Kein Anführungszeichen, keine Einleitung, nur der eine Satz.
 
 Produkt: ${productTitle}
 Kategorie: ${productCategory || "Schmuck"}`;
