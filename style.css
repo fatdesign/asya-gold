@@ -77,17 +77,7 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     
-    /* Page Transition */
-    opacity: 0;
-    transition: opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-body.loaded {
-    opacity: 1;
-}
-
-body.page-exit {
-    opacity: 0;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* Typography */
