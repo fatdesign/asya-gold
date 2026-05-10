@@ -279,25 +279,23 @@ async function fetchSettings() {
         const response = await fetch(`${API_URL}/settings`);
         const settings = await response.json();
         
-        // AN/AUS Logik
+        // AN/AUS Logik Marquee
         if (settings.marquee_active === 'false') {
             if (header) header.style.top = '0';
-            
             // Padding Anpassung für Shop-Seite
             const main = document.querySelector('main');
             if (main && window.location.pathname.includes('shop.html')) {
                 main.style.paddingTop = '100px';
             }
-            return;
+            if (marqueeBar) marqueeBar.style.display = 'none';
+        } else {
+            // Wenn aktiv: Einblenden und Text setzen
+            if (marqueeBar) marqueeBar.style.display = 'flex';
+            const text = settings.marquee_text || 'ASYA GOLD — FINE JEWELRY & ART';
+            // Wir wiederholen den Text mehrfach für einen nahtlosen Übergang
+            const items = Array(8).fill(`<span class="marquee-item">${text}</span>`).join('');
+            marqueeContainer.innerHTML = items;
         }
-
-        // Wenn aktiv: Einblenden und Text setzen
-        if (marqueeBar) marqueeBar.style.display = 'flex';
-        const text = settings.marquee_text || 'ASYA GOLD — FINE JEWELRY & ART';
-        
-        // Wir wiederholen den Text mehrfach für einen nahtlosen Übergang
-        const items = Array(8).fill(`<span class="marquee-item">${text}</span>`).join('');
-        marqueeContainer.innerHTML = items;
 
         // --- Home Page Dynamisierung (Featured Sections) ---
         window.currentSettings = settings;
