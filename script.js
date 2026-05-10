@@ -284,7 +284,7 @@ async function fetchSettings() {
             if (header) header.style.top = '0';
             // Padding Anpassung für Shop-Seite
             const main = document.querySelector('main');
-            if (main && window.location.pathname.includes('shop.html')) {
+            if (main && window.location.pathname.includes('/shop/')) {
                 main.style.paddingTop = '100px';
             }
             if (marqueeBar) marqueeBar.style.display = 'none';
@@ -341,6 +341,26 @@ function renderFeaturedSlots() {
 
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
+    // Body Reveal
+    setTimeout(() => {
+        document.body.classList.add('loaded');
+    }, 100);
+
+    // Smooth Page Transitions für interne Links
+    document.querySelectorAll('a').forEach(link => {
+        const href = link.getAttribute('href');
+        // Filter für interne Seiten (keine IDs, keine externen Protokolle)
+        if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('tel:') && !href.startsWith('mailto:')) {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.remove('loaded');
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 500);
+            });
+        }
+    });
+
     fetchSettings();
     renderProducts();
     updateCartUI();
