@@ -92,7 +92,10 @@
                                 </select>
                             </div>
                             <div>
-                                <label style="display: block; font-size: 9px; text-transform: uppercase; margin-bottom: 5px;">Text neben dem Produkt</label>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
+                                    <label style="display: block; font-size: 9px; text-transform: uppercase;">Text neben dem Produkt</label>
+                                    <button onclick="generateAIText(1)" style="background: none; border: none; color: var(--gold); font-size: 9px; text-transform: uppercase; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 5px;"><i class="fa-solid fa-wand-magic-sparkles"></i> KI Text generieren</button>
+                                </div>
                                 <textarea id="featured-1-text" rows="3" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 12px;" placeholder="Beschreibe diese Kollektion oder dieses Stück..."></textarea>
                             </div>
                         </div>
@@ -108,7 +111,10 @@
                                 </select>
                             </div>
                             <div>
-                                <label style="display: block; font-size: 9px; text-transform: uppercase; margin-bottom: 5px;">Text neben dem Produkt</label>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
+                                    <label style="display: block; font-size: 9px; text-transform: uppercase;">Text neben dem Produkt</label>
+                                    <button onclick="generateAIText(2)" style="background: none; border: none; color: var(--gold); font-size: 9px; text-transform: uppercase; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 5px;"><i class="fa-solid fa-wand-magic-sparkles"></i> KI Text generieren</button>
+                                </div>
                                 <textarea id="featured-2-text" rows="3" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 12px;" placeholder="Beschreibe diese Kollektion oder dieses Stück..."></textarea>
                             </div>
                         </div>
@@ -393,6 +399,45 @@
             } finally {
                 btn.disabled = false;
                 btn.innerText = originalText;
+            }
+        };
+
+        window.generateAIText = async (slotNumber) => {
+            const select = document.getElementById(`featured-${slotNumber}-id`);
+            const textarea = document.getElementById(`featured-${slotNumber}-text`);
+            const productId = select.value;
+
+            if (!productId) {
+                alert("Bitte wählen Sie zuerst ein Produkt aus.");
+                return;
+            }
+
+            const product = products.find(p => p.id == productId);
+            if (!product) return;
+
+            const originalBtn = event.currentTarget;
+            const originalHTML = originalBtn.innerHTML;
+            originalBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generiere...';
+            originalBtn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_URL}/generate-ai-text`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: product.title,
+                        category: product.category
+                    })
+                });
+
+                if (!res.ok) throw new Error("KI-Service nicht erreichbar");
+                const data = await res.json();
+                textarea.value = data.text;
+            } catch (err) {
+                alert("KI-Fehler: " + err.message);
+            } finally {
+                originalBtn.innerHTML = originalHTML;
+                originalBtn.disabled = false;
             }
         };
 
