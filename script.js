@@ -332,11 +332,13 @@ function renderFeaturedSlots() {
     if (!settings || !products) return;
 
     // Slot 1
-    if (settings.featured_1_id) {
+    const section1 = document.getElementById('featured-section-1');
+    if (settings.featured_1_id && section1) {
         const p1 = products.find(p => p.id == settings.featured_1_id);
         if (p1) {
-            document.getElementById('featured-section-1').style.display = 'grid';
-            document.getElementById('divider-1').style.display = 'block';
+            section1.style.display = 'grid';
+            const d1 = document.getElementById('divider-1');
+            if (d1) d1.style.display = 'block';
             document.getElementById('f1-image-container').innerHTML = `<img src="${p1.image_url}" alt="${p1.title}">`;
             document.getElementById('f1-category').innerText = p1.category;
             document.getElementById('f1-title').innerText = p1.title;
@@ -345,11 +347,13 @@ function renderFeaturedSlots() {
     }
 
     // Slot 2
-    if (settings.featured_2_id) {
+    const section2 = document.getElementById('featured-section-2');
+    if (settings.featured_2_id && section2) {
         const p2 = products.find(p => p.id == settings.featured_2_id);
         if (p2) {
-            document.getElementById('featured-section-2').style.display = 'grid';
-            document.getElementById('divider-2').style.display = 'block';
+            section2.style.display = 'grid';
+            const d2 = document.getElementById('divider-2');
+            if (d2) d2.style.display = 'block';
             document.getElementById('f2-image-container').innerHTML = `<img src="${p2.image_url}" alt="${p2.title}">`;
             document.getElementById('f2-category').innerText = p2.category;
             document.getElementById('f2-title').innerText = p2.title;
@@ -357,6 +361,7 @@ function renderFeaturedSlots() {
         }
     }
 }
+
 
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
