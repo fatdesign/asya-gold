@@ -154,7 +154,10 @@ Kategorie: ${productCategory || "Schmuck"}`;
 
         if (!geminiRes.ok) {
           const errText = await geminiRes.text();
-          return new Response(JSON.stringify({ error: "Gemini API Fehler", details: errText }), { status: 500, headers: corsHeaders });
+          return new Response(JSON.stringify({ error: "Gemini API Fehler (Status " + geminiRes.status + ")", details: errText }), { 
+            status: 500, 
+            headers: { ...corsHeaders, "Content-Type": "application/json" } 
+          });
         }
 
         const geminiData = await geminiRes.json();

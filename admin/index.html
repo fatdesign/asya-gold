@@ -430,12 +430,15 @@
                     })
                 });
 
-                if (!response.ok) throw new Error('KI-Anfrage fehlgeschlagen');
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || 'KI-Anfrage fehlgeschlagen' + (errData.details ? '\n\nDetails: ' + errData.details : ''));
+                }
 
                 const data = await response.json();
                 textarea.value = data.text;
             } catch (err) {
-                alert('Fehler bei der Textgenerierung: ' + err.message);
+                alert('Fehler bei der Textgenerierung:\n' + err.message);
             } finally {
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
