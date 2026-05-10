@@ -82,17 +82,39 @@
                         <textarea id="marquee-input" rows="2" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 12px;" placeholder="Text für die Laufleiste..."></textarea>
                     </div>
 
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700;">Home Page Hero (Haupt-Überschrift)</label>
-                        <textarea id="hero-title-input" rows="2" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 14px;" placeholder="z.B. Meisterstücke aus Gold."></textarea>
+                    <div style="margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 25px;">
+                        <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-weight: 700; color: var(--gold);">Highlight Sektion 1 (Home Page)</label>
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                            <div>
+                                <label style="display: block; font-size: 9px; text-transform: uppercase; margin-bottom: 5px;">Produkt auswählen</label>
+                                <select id="featured-1-id" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-size: 12px;">
+                                    <option value="">-- Kein Produkt ausgewählt --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 9px; text-transform: uppercase; margin-bottom: 5px;">Text neben dem Produkt</label>
+                                <textarea id="featured-1-text" rows="3" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 12px;" placeholder="Beschreibe diese Kollektion oder dieses Stück..."></textarea>
+                            </div>
+                        </div>
                     </div>
 
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700;">Home Page Untertitel</label>
-                        <input type="text" id="hero-subtitle-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 12px;" placeholder="z.B. Est. 1999 — Fine Jewelry">
+                    <div style="margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 25px;">
+                        <label style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-weight: 700; color: var(--gold);">Highlight Sektion 2 (Home Page)</label>
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                            <div>
+                                <label style="display: block; font-size: 9px; text-transform: uppercase; margin-bottom: 5px;">Produkt auswählen</label>
+                                <select id="featured-2-id" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-size: 12px;">
+                                    <option value="">-- Kein Produkt ausgewählt --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 9px; text-transform: uppercase; margin-bottom: 5px;">Text neben dem Produkt</label>
+                                <textarea id="featured-2-text" rows="3" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 12px;" placeholder="Beschreibe diese Kollektion oder dieses Stück..."></textarea>
+                            </div>
+                        </div>
                     </div>
 
-                    <button onclick="updateSettings()" id="save-settings-btn" class="cta-luxury" style="width: 100%; padding: 15px;">Änderungen speichern</button>
+                    <button onclick="updateSettings()" id="save-settings-btn" class="cta-luxury" style="width: 100%; padding: 15px;">Website-Inhalte aktualisieren</button>
                 </div>
             </div>
 
@@ -122,9 +144,26 @@
                 const res = await fetch(`${API_URL}/products`);
                 products = await res.json();
                 renderAdminList();
+                populateFeaturedDropdowns();
             } catch (err) {
                 console.error("Laden fehlgeschlagen:", err);
             }
+        }
+
+        function populateFeaturedDropdowns() {
+            const selects = [document.getElementById('featured-1-id'), document.getElementById('featured-2-id')];
+            selects.forEach(select => {
+                if (!select) return;
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">-- Kein Produkt ausgewählt --</option>';
+                products.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p.id;
+                    opt.textContent = p.title;
+                    select.appendChild(opt);
+                });
+                select.value = currentValue;
+            });
         }
 
         function renderAdminList() {
@@ -313,11 +352,17 @@
                 if (settings.marquee_active) {
                     document.getElementById('marquee-active').checked = settings.marquee_active === 'true';
                 }
-                if (settings.hero_title) {
-                    document.getElementById('hero-title-input').value = settings.hero_title;
+                if (settings.featured_1_id) {
+                    document.getElementById('featured-1-id').value = settings.featured_1_id;
                 }
-                if (settings.hero_subtitle) {
-                    document.getElementById('hero-subtitle-input').value = settings.hero_subtitle;
+                if (settings.featured_1_text) {
+                    document.getElementById('featured-1-text').value = settings.featured_1_text;
+                }
+                if (settings.featured_2_id) {
+                    document.getElementById('featured-2-id').value = settings.featured_2_id;
+                }
+                if (settings.featured_2_text) {
+                    document.getElementById('featured-2-text').value = settings.featured_2_text;
                 }
             } catch (err) {
                 console.error("Einstellungen konnten nicht geladen werden:", err);
@@ -332,8 +377,10 @@
 
             const marqueeText = document.getElementById('marquee-input').value;
             const marqueeActive = document.getElementById('marquee-active').checked ? 'true' : 'false';
-            const heroTitle = document.getElementById('hero-title-input').value;
-            const heroSubtitle = document.getElementById('hero-subtitle-input').value;
+            const f1Id = document.getElementById('featured-1-id').value;
+            const f1Text = document.getElementById('featured-1-text').value;
+            const f2Id = document.getElementById('featured-2-id').value;
+            const f2Text = document.getElementById('featured-2-text').value;
             
             try {
                 const response = await fetch(`${API_URL}/settings`, {
@@ -342,8 +389,10 @@
                     body: JSON.stringify({ 
                         marquee_text: marqueeText,
                         marquee_active: marqueeActive,
-                        hero_title: heroTitle,
-                        hero_subtitle: heroSubtitle
+                        featured_1_id: f1Id,
+                        featured_1_text: f1Text,
+                        featured_2_id: f2Id,
+                        featured_2_text: f2Text
                     })
                 });
                 

@@ -259,6 +259,9 @@ async function renderProducts() {
             observer.observe(item);
         });
 
+        // --- Featured Slots auf Home Page rendern ---
+        renderFeaturedSlots();
+
     } catch (err) {
         console.error("Fehler beim Laden der Produkte:", err);
         container.innerHTML = `<p style="text-align: center; grid-column: 1/-1; color: var(--gray); padding: 100px 0;">Verbindung zum Server fehlgeschlagen.</p>`;
@@ -296,19 +299,45 @@ async function fetchSettings() {
         const items = Array(8).fill(`<span class="marquee-item">${text}</span>`).join('');
         marqueeContainer.innerHTML = items;
 
-        // --- Home Page Dynamisierung ---
-        const hTitle = document.getElementById('hero-title');
-        const hSubtitle = document.getElementById('hero-subtitle');
-
-        if (hTitle && settings.hero_title) {
-            // Wir erlauben <br> und <span> für die Gold-Optik
-            hTitle.innerHTML = settings.hero_title;
-        }
-        if (hSubtitle && settings.hero_subtitle) {
-            hSubtitle.innerText = settings.hero_subtitle;
+        // --- Home Page Dynamisierung (Featured Sections) ---
+        window.currentSettings = settings;
+        if (window.allProducts) {
+            renderFeaturedSlots();
         }
     } catch (err) {
         console.error("Fehler beim Laden der Einstellungen:", err);
+    }
+}
+
+function renderFeaturedSlots() {
+    const settings = window.currentSettings;
+    const products = window.allProducts;
+    if (!settings || !products) return;
+
+    // Slot 1
+    if (settings.featured_1_id) {
+        const p1 = products.find(p => p.id == settings.featured_1_id);
+        if (p1) {
+            document.getElementById('featured-section-1').style.display = 'grid';
+            document.getElementById('divider-1').style.display = 'block';
+            document.getElementById('f1-image-container').innerHTML = `<img src="${p1.image_url}" alt="${p1.title}">`;
+            document.getElementById('f1-category').innerText = p1.category;
+            document.getElementById('f1-title').innerText = p1.title;
+            document.getElementById('f1-text').innerText = settings.featured_1_text || '';
+        }
+    }
+
+    // Slot 2
+    if (settings.featured_2_id) {
+        const p2 = products.find(p => p.id == settings.featured_2_id);
+        if (p2) {
+            document.getElementById('featured-section-2').style.display = 'grid';
+            document.getElementById('divider-2').style.display = 'block';
+            document.getElementById('f2-image-container').innerHTML = `<img src="${p2.image_url}" alt="${p2.title}">`;
+            document.getElementById('f2-category').innerText = p2.category;
+            document.getElementById('f2-title').innerText = p2.title;
+            document.getElementById('f2-text').innerText = settings.featured_2_text || '';
+        }
     }
 }
 

@@ -114,21 +114,36 @@
             </div>
         </section>
 
-        <!-- Lifestyle Split Section -->
-        <section class="lifestyle-split container">
-            <div class="lifestyle-split-image reveal-left">
-                <img src="images/asya_lifestyle_eyecatcher.png" alt="Asya Gold Lifestyle">
+        <!-- Dynamic Featured Section 1 -->
+        <section id="featured-section-1" class="lifestyle-split container" style="display: none;">
+            <div class="lifestyle-split-image reveal-left" id="f1-image-container">
+                <!-- Image via JS -->
             </div>
             <div class="lifestyle-split-content reveal-right reveal-delay-2">
-                <span>Exklusive Kollektion</span>
-                <h2>Wahre Eleganz ist zeitlos.</h2>
-                <p>Unsere Designs sind eine Hommage an die Weiblichkeit und die unvergängliche Schönheit von reinem
-                    Gold. Jedes Detail wird mit höchster Präzision gefertigt, um Ihre Geschichte zu erzählen.</p>
-                <a href="shop.html" class="cta-luxury">Kollektion entdecken</a>
+                <span id="f1-category">Exklusive Kollektion</span>
+                <h2 id="f1-title">Produkttitel</h2>
+                <p id="f1-text">Beschreibungstext...</p>
+                <a href="shop.html" class="cta-luxury" id="f1-link">Zum Produkt</a>
             </div>
         </section>
 
-        <div class="noble-divider"></div>
+        <div class="noble-divider" id="divider-1" style="display: none;"></div>
+
+        <!-- Dynamic Featured Section 2 -->
+        <section id="featured-section-2" class="lifestyle-split container" style="display: none; grid-template-columns: 1fr 1fr;">
+            <!-- Reverse layout for visual variety -->
+            <div class="lifestyle-split-content reveal-left">
+                <span id="f2-category">Exklusive Kollektion</span>
+                <h2 id="f2-title">Produkttitel</h2>
+                <p id="f2-text">Beschreibungstext...</p>
+                <a href="shop.html" class="cta-luxury" id="f2-link">Details ansehen</a>
+            </div>
+            <div class="lifestyle-split-image reveal-right reveal-delay-2" id="f2-image-container">
+                <!-- Image via JS -->
+            </div>
+        </section>
+
+        <div class="noble-divider" id="divider-2" style="display: none;"></div>
 
         <!-- Collection Section -->
         <section id="kollektion">
