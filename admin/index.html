@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Asya Gold</title>
-    <link rel="icon" type="image/png" href="images/logo/logo.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="../images/logo/logo.png">
+    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body style="background: var(--cream);">
 
     <header class="scrolled" style="top: 0 !important; background: var(--white); border-bottom: 1px solid var(--border);">
         <div class="container nav-wrapper" style="display: flex; justify-content: space-between; align-items: center;">
-            <a href="index.html" style="font-family: var(--font-serif); font-size: 24px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; color: #000; font-weight: 400;">Admin Panel</a>
+            <a href="../index.html" style="font-family: var(--font-serif); font-size: 24px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; color: #000; font-weight: 400;">Admin Panel</a>
             <nav class="nav-links" style="display: flex; gap: 30px;">
-                <a href="index.html" style="text-decoration: none; color: #000; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Zur Website</a>
-                <a href="shop.html" style="text-decoration: none; color: #000; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Shop-Ansicht</a>
+                <a href="../index.html" style="text-decoration: none; color: #000; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Zur Website</a>
+                <a href="../shop/index.html" style="text-decoration: none; color: #000; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Shop-Ansicht</a>
             </nav>
         </div>
     </header>
@@ -224,7 +224,6 @@
 
         document.getElementById('add-product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            console.log("Submit-Event ausgelöst.");
             
             const submitBtn = document.getElementById('submit-btn');
             const originalText = submitBtn.innerText;
@@ -235,11 +234,7 @@
             let finalImageUrl = document.getElementById('image-url').value.trim();
             const imageFile = document.getElementById('image-file').files[0];
 
-            console.log("Input Daten:", { editId, finalImageUrl, hasFile: !!imageFile });
-
-            // 1. Wenn ein File ausgewählt wurde, zu R2 hochladen
             if (imageFile) {
-                console.log("Starte Bild-Upload...");
                 const formData = new FormData();
                 formData.append('file', imageFile);
                 try {
@@ -250,7 +245,6 @@
                     if (!uploadRes.ok) throw new Error("Upload fehlgeschlagen");
                     const uploadData = await uploadRes.json();
                     finalImageUrl = uploadData.url;
-                    console.log("Upload erfolgreich:", finalImageUrl);
                 } catch (err) {
                     console.error("Upload-Fehler:", err);
                     alert("Upload fehlgeschlagen: " + err.message);
@@ -260,7 +254,6 @@
                 }
             }
 
-            // 2. Produktdaten an Worker senden
             const productData = {
                 id: editId ? parseInt(editId) : null,
                 title: document.getElementById('title').value,
@@ -270,8 +263,6 @@
                 image: finalImageUrl || 'images/gold1.png',
                 active: true
             };
-
-            console.log("Sende Produkt-Daten:", productData);
 
             try {
                 const response = await fetch(`${API_URL}/products`, {
@@ -285,9 +276,6 @@
                     throw new Error("Server-Fehler: " + errorText);
                 }
                 
-                const resData = await response.json();
-                console.log("Server-Antwort:", resData);
-
                 alert("Erfolgreich gespeichert!");
                 resetForm();
                 fetchProducts();
@@ -341,7 +329,6 @@
             document.getElementById('cancel-btn').style.display = 'none';
         };
 
-        // --- Marquee Settings ---
         async function fetchSettings() {
             try {
                 const res = await fetch(`${API_URL}/settings`);
@@ -412,7 +399,6 @@
         fetchProducts();
         fetchSettings();
 
-        // Reveal body after load (Transition Fix)
         function revealBody() {
             setTimeout(() => {
                 document.body.classList.add('loaded');

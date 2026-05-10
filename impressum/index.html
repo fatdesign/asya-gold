@@ -10,26 +10,65 @@
 </head>
 
 <body class="legal-page">
-    <!-- Header -->
-    <header id="header" class="scrolled" style="top: 0 !important; background: var(--white); border-bottom: 1px solid var(--border);">
-        <nav class="container nav-wrapper">
-            <div class="menu-toggle" id="menu-toggle">
-                <span></span>
-                <span></span>
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3>Warenkorb</h3>
+            <button class="close-btn" id="close-cart"><span class="close-icon"></span></button>
+        </div>
+        <div class="cart-items" id="cart-items-container">
+            <!-- Items via JS -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Gesamtsumme</span>
+                <span id="cart-total-price">0,00 €</span>
             </div>
-            
-            <a href="../index.html" class="logo">ASYA GOLD</a>
+            <button class="cta-luxury" style="width: 100%; margin-top: 20px;" onclick="startCheckout()">Zur Kasse</button>
+        </div>
+    </div>
 
-            <div class="nav-links">
-                <a href="../shop.html">Shop</a>
-                <a href="../index.html#atelier">Atelier</a>
-                <a href="../index.html#kollektion">Kollektion</a>
-            </div>
-
-            <div class="nav-icons">
-                <a href="#" id="cart-btn"><i class="fa-solid fa-bag-shopping"></i><span class="cart-count">0</span></a>
-            </div>
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobile-menu">
+        <button class="close-btn" id="close-mobile-menu"><span class="close-icon"></span></button>
+        <nav class="mobile-nav-links">
+            <a href="../index.html">Home</a>
+            <a href="../shop/index.html">Shop</a>
+            <a href="../index.html#atelier">Über uns</a>
+            <a href="#">Kontakt</a>
         </nav>
+    </div>
+
+    <!-- Navigation -->
+    <header id="header" class="scrolled" style="top: 0 !important; background: var(--white); border-bottom: 1px solid var(--border);">
+        <div class="nav-wrapper">
+            <!-- Left Links -->
+            <nav class="nav-links nav-group-left">
+                <a href="../index.html">Home</a>
+                <a href="../shop/index.html">Shop</a>
+            </nav>
+
+            <!-- Center Logo -->
+            <a href="../index.html" class="logo">
+                <img src="../images/logo/logo.png" alt="Asya Gold Logo">
+            </a>
+
+            <!-- Right Zone -->
+            <div class="nav-group-right-wrapper">
+                <nav class="nav-links nav-group-right">
+                    <a href="../index.html#atelier">Über uns</a>
+                    <a href="#">Kontakt</a>
+                </nav>
+                <div class="nav-actions">
+                    <button class="cart-btn">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </button>
+                    <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+                </div>
+            </div>
+        </div>
     </header>
 
     <main style="padding: 150px 0 100px;">
