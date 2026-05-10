@@ -123,6 +123,48 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // --- API: KI-Textgenerierung ---
+      if (path === "/api/generate-text" && method === "POST") {
+        const { productTitle, productCategory } = await request.json();
+        if (!productTitle) {
+          return new Response(JSON.stringify({ error: "Produktname fehlt" }), { status: 400, headers: corsHeaders });
+        }
+
+        const apiKey = env.KI_API;
+        if (!apiKey) {
+          return new Response(JSON.stringify({ error: "KI API-Key nicht konfiguriert" }), { status: 500, headers: corsHeaders });
+        }
+
+        const prompt = `Du bist ein erfahrener Texter für eine edle Schmuck-Boutique namens "ASYA GOLD". Schreibe einen kurzen, luxuriösen Werbetext (maximal 2-3 Sätze) für das folgende Produkt. Der Text soll elegant, feminin und einladend klingen – wie aus einem Hochglanz-Katalog. Keine Hashtags, keine Emojis, kein Slang. Nur den reinen Text ausgeben, ohne Anführungszeichen.
+
+Produkt: ${productTitle}
+Kategorie: ${productCategory || "Schmuck"}`;
+
+        const geminiRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { temperature: 0.8, maxOutputTokens: 200 }
+            })
+          }
+        );
+
+        if (!geminiRes.ok) {
+          const errText = await geminiRes.text();
+          return new Response(JSON.stringify({ error: "Gemini API Fehler", details: errText }), { status: 500, headers: corsHeaders });
+        }
+
+        const geminiData = await geminiRes.json();
+        const generatedText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "Text konnte nicht generiert werden.";
+
+        return new Response(JSON.stringify({ text: generatedText.trim() }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       return new Response("Not Found", { status: 404 });
 
     } catch (err) {

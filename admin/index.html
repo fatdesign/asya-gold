@@ -94,6 +94,7 @@
                             <div>
                                 <label style="display: block; font-size: 9px; text-transform: uppercase; margin-bottom: 5px;">Text neben dem Produkt</label>
                                 <textarea id="featured-1-text" rows="3" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 12px;" placeholder="Beschreibe diese Kollektion oder dieses Stück..."></textarea>
+                                <button type="button" onclick="generateAIText(1)" id="ai-btn-1" style="margin-top: 8px; background: linear-gradient(135deg, #C5A059, #D4B67C); color: #fff; border: none; padding: 8px 18px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Text generieren (KI)</button>
                             </div>
                         </div>
                     </div>
@@ -110,6 +111,7 @@
                             <div>
                                 <label style="display: block; font-size: 9px; text-transform: uppercase; margin-bottom: 5px;">Text neben dem Produkt</label>
                                 <textarea id="featured-2-text" rows="3" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: var(--font-sans); font-size: 12px;" placeholder="Beschreibe diese Kollektion oder dieses Stück..."></textarea>
+                                <button type="button" onclick="generateAIText(2)" id="ai-btn-2" style="margin-top: 8px; background: linear-gradient(135deg, #C5A059, #D4B67C); color: #fff; border: none; padding: 8px 18px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Text generieren (KI)</button>
                             </div>
                         </div>
                     </div>
@@ -393,6 +395,50 @@
             } finally {
                 btn.disabled = false;
                 btn.innerText = originalText;
+            }
+        };
+
+        // --- KI-Textgenerierung ---
+        window.generateAIText = async (slotNumber) => {
+            const select = document.getElementById(`featured-${slotNumber}-id`);
+            const textarea = document.getElementById(`featured-${slotNumber}-text`);
+            const btn = document.getElementById(`ai-btn-${slotNumber}`);
+
+            const selectedId = select.value;
+            if (!selectedId) {
+                alert('Bitte wähle zuerst ein Produkt aus.');
+                return;
+            }
+
+            const product = products.find(p => p.id == selectedId);
+            if (!product) {
+                alert('Produkt nicht gefunden.');
+                return;
+            }
+
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generiere...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/generate-text`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        productTitle: product.title,
+                        productCategory: product.category
+                    })
+                });
+
+                if (!response.ok) throw new Error('KI-Anfrage fehlgeschlagen');
+
+                const data = await response.json();
+                textarea.value = data.text;
+            } catch (err) {
+                alert('Fehler bei der Textgenerierung: ' + err.message);
+            } finally {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
             }
         };
 
