@@ -73,10 +73,38 @@ function toggleMobileMenu() {
 if (menuToggle) menuToggle.addEventListener('click', toggleMobileMenu);
 if (closeMobileMenu) closeMobileMenu.addEventListener('click', toggleMobileMenu);
 
-// Close mobile menu on link click
-document.querySelectorAll('.mobile-nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
+// --- Page Transition Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Reveal body after load
+    setTimeout(() => {
+        document.body.classList.add('loaded');
+    }, 100);
+
+    // Smooth Navigation (Intercept link clicks)
+    document.querySelectorAll('a').forEach(link => {
+        // Only internal links that don't open in new tab
+        if (link.hostname === window.location.hostname && 
+            !link.hash && 
+            link.target !== '_blank' && 
+            !link.href.includes('mailto:') && 
+            !link.href.includes('tel:')) {
+            
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = link.href;
+                document.body.classList.add('page-exit');
+                setTimeout(() => {
+                    window.location.href = target;
+                }, 800); // Wait for transition
+            });
+        }
+    });
+
+    // Ensure mobile menu closes on click
+    document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
     });
 });
 

@@ -76,6 +76,18 @@ body {
     line-height: 1.7;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    
+    /* Page Transition */
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+body.loaded {
+    opacity: 1;
+}
+
+body.page-exit {
+    opacity: 0;
 }
 
 /* Typography */
@@ -596,6 +608,13 @@ section {
     gap: 60px;
 }
 
+/* Homepage specific: 15% smaller containers */
+.home-page .product-grid {
+    max-width: 1100px; /* Reduced from 1400px container default */
+    margin: 0 auto;
+    gap: 80px; /* More breathing room */
+}
+
 /* Shop Page - 4 Column Layout */
 .shop-page .product-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -639,11 +658,11 @@ section {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: transform 2.5s cubic-bezier(0.16, 1, 0.3, 1); /* Slower, more elegant */
 }
 
 .product-item:hover .product-image-container img {
-    transform: scale(1.1);
+    transform: scale(1.05); /* Subtler zoom */
 }
 
 .product-details {
