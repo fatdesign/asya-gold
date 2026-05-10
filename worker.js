@@ -66,8 +66,6 @@ export default {
           httpMetadata: { contentType: file.type },
         });
 
-        // Rückgabe der URL (Annahme: R2 ist via Custom Domain oder Worker-Route erreichbar)
-        // Hier geben wir den Pfad zurück, den der Worker später auflösen kann
         return new Response(JSON.stringify({ 
           url: `https://asya-gold.f-klavun.workers.dev/images/${fileName}`,
           fileName: fileName 
@@ -135,35 +133,25 @@ export default {
           return new Response(JSON.stringify({ error: "KI API-Key nicht konfiguriert" }), { status: 500, headers: corsHeaders });
         }
 
-        const prompt = `Du bist ein erfahrener Texter für eine edle Schmuck-Boutique namens "ASYA GOLD". Schreibe einen kurzen, luxuriösen Werbetext (maximal 2-3 Sätze) für das folgende Produkt. Der Text soll elegant, feminin und einladend klingen – wie aus einem Hochglanz-Katalog. Keine Hashtags, keine Emojis, kein Slang. Nur den reinen Text ausgeben, ohne Anführungszeichen.
+        const prompt = `Du bist ein erfahrener Texter für eine edle Schmuck-Boutique namens "ASYA GOLD". 
+Schreibe einen kurzen, luxuriösen Werbetext (maximal 2-3 Sätze) für das folgende Produkt. 
+Der Text soll elegant, feminin und einladend klingen – wie aus einem Hochglanz-Katalog. 
+WICHTIG: Beende deine Sätze immer vollständig. Gib nur den reinen Text aus, ohne Anführungszeichen, ohne Einleitung.
 
 Produkt: ${productTitle}
 Kategorie: ${productCategory || "Schmuck"}`;
 
-        const geminiRes = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: { temperature: 0.8, maxOutputTokens: 200 }
-            })
-          }
-        );
-
-        if (!geminiRes.ok) {
-          const errText = await geminiRes.text();
-          return new Response(JSON.stringify({ error: "Gemini API Fehler (Status " + geminiRes.status + ")", details: errText }), { 
+        let generatedText;
+        try {
+          generatedText = await callGemini(prompt, apiKey);
+        } catch (aiErr) {
+          return new Response(JSON.stringify({ error: aiErr.message }), { 
             status: 500, 
             headers: { ...corsHeaders, "Content-Type": "application/json" } 
           });
         }
 
-        const geminiData = await geminiRes.json();
-        const generatedText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "Text konnte nicht generiert werden.";
-
-        return new Response(JSON.stringify({ text: generatedText.trim() }), {
+        return new Response(JSON.stringify({ text: generatedText }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -175,3 +163,54 @@ Kategorie: ${productCategory || "Schmuck"}`;
     }
   },
 };
+
+/**
+ * Robust AI Caller – probiert mehrere Modelle und API-Versionen durch
+ */
+async function callGemini(prompt, apiKey) {
+  const versions = ["v1beta", "v1"];
+  const models = [
+    "models/gemini-1.5-flash",
+    "models/gemini-1.5-flash-latest",
+    "models/gemini-2.0-flash-exp",
+    "models/gemini-1.5-pro",
+    "models/gemini-2.0-flash-lite-preview-02-05",
+    "models/gemini-2.0-flash"
+  ];
+
+  let lastError = "";
+
+  for (const ver of versions) {
+    for (const model of models) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/${ver}/${model}:generateContent?key=${apiKey}`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { 
+              temperature: 0.7, 
+              maxOutputTokens: 1000,
+              topP: 0.9,
+              topK: 40
+            }
+          })
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text && text.trim().length > 5) return text.trim();
+        } else {
+          const errData = await response.json().catch(() => ({}));
+          lastError = `[${ver}/${model}] ${response.status}: ${errData.error?.message || "Unknown error"}`;
+        }
+      } catch (e) {
+        lastError = `[Fetch Error] ${e.message}`;
+      }
+    }
+  }
+
+  throw new Error(`KI-Textgenerierung nach allen Versuchen fehlgeschlagen. Letzter Fehler: ${lastError}`);
+}
